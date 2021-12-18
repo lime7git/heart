@@ -1,0 +1,7 @@
+~$*.SLDPRT
+~$*.SLDASM
+~$*.xlsx
+*~
+.DS_Store
+
+**/heart-other/**
