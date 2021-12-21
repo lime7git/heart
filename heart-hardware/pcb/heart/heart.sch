@@ -114,17 +114,6 @@ F 3 "" H 3260 890 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L MCU_ST_STM32L0:STM32L031F6Px U1
-U 1 1 61C303F2
-P 2300 3600
-F 0 "U1" H 2300 2510 50  0000 C CNN
-F 1 "STM32L031F6Px" H 2300 2420 50  0000 C CNN
-F 2 "Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm" H 1900 2900 50  0001 R CNN
-F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00140359.pdf" H 2300 3600 50  0001 C CNN
-	1    2300 3600
-	1    0    0    -1  
-$EndComp
-$Comp
 L tca6416apwr:TCA6416APWR U2
 U 1 1 61C32B3D
 P 4800 3100
@@ -973,8 +962,6 @@ Wire Wire Line
 	2670 1240 2670 1010
 Wire Wire Line
 	2670 1010 2550 1010
-Wire Wire Line
-	2670 1010 2790 1010
 Connection ~ 2670 1010
 Wire Wire Line
 	9000 3600 8700 3600
@@ -1050,14 +1037,8 @@ Wire Wire Line
 	8600 3200 9000 3200
 Wire Wire Line
 	9000 3300 8600 3300
-Text GLabel 3000 3700 2    50   Input ~ 0
-LIS3DH_INT1
-Text GLabel 3000 3800 2    50   Input ~ 0
-LIS3DH_INT2
 Wire Wire Line
-	3000 3800 2800 3800
-Wire Wire Line
-	2800 3700 3000 3700
+	3000 3300 2800 3300
 Wire Wire Line
 	9400 2900 9400 2800
 Wire Wire Line
@@ -1197,4 +1178,51 @@ Text Notes 1760 -870 0    197  ~ 39
 add test pads for current probe
 Text Notes 1720 -550 0    197  ~ 39
 check stm wakeup pins and connect to lis3dh interrupt lines\n
+Wire Wire Line
+	2800 3100 3000 3100
+Text GLabel 3000 3100 2    50   Input ~ 0
+LIS3DH_INT1
+$Comp
+L MCU_ST_STM32L0:STM32L031F6Px U1
+U 1 1 61C303F2
+P 2300 3600
+F 0 "U1" H 2300 2510 50  0000 C CNN
+F 1 "STM32L031F6Px" H 2300 2420 50  0000 C CNN
+F 2 "Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm" H 1900 2900 50  0001 R CNN
+F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00140359.pdf" H 2300 3600 50  0001 C CNN
+	1    2300 3600
+	1    0    0    -1  
+$EndComp
+Text GLabel 3000 3300 2    50   Input ~ 0
+LIS3DH_INT2
+$Comp
+L Connector_Generic:Conn_01x01 J6
+U 1 1 61C4725D
+P 3090 1300
+F 0 "J6" H 3008 1075 50  0001 C CNN
+F 1 "PROB2" H 3280 1300 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 3090 1300 50  0001 C CNN
+F 3 "~" H 3090 1300 50  0001 C CNN
+	1    3090 1300
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2670 1010 2790 1010
+$Comp
+L Connector_Generic:Conn_01x01 J5
+U 1 1 61C62082
+P 2790 1300
+F 0 "J5" H 2708 1075 50  0001 C CNN
+F 1 "PROB1" H 2970 1300 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 2790 1300 50  0001 C CNN
+F 3 "~" H 2790 1300 50  0001 C CNN
+	1    2790 1300
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2790 1100 2790 1010
+Connection ~ 2790 1010
+Wire Wire Line
+	3090 1100 3090 1010
+Connection ~ 3090 1010
 $EndSCHEMATC
