@@ -1,0 +1,62 @@
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+# STMicroelectronics STM32G031J6M6
+#
+DEF STM32G031J6M6 U 0 40 Y Y 1 L N
+F0 "U" 0 200 50 H V L CNN 
+F1 "STM32G031J6M6" 0 300 50 H V L CNN 
+F2 "STMicroelectronics-SO8N-SO-A-0-2-*" 0 400 50 H I L CNN 
+F3 "https://www.st.com/resource/en/datasheet/stm32g031j6.pdf" 0 500 50 H I L CNN 
+F4 "8KBytes" 0 600 50 H I L CNN "RAM size"
+F5 "+85°C" 0 700 50 H I L CNN "ambient temperature range high"
+F6 "-40°C" 0 800 50 H I L CNN "ambient temperature range low"
+F7 "No" 0 900 50 H I L CNN "automotive"
+F8 "IC" 0 1000 50 H I L CNN "category"
+F9 "ARM Cortex-M0+" 0 1100 50 H I L CNN "core architecture"
+F10 "32bits" 0 1200 50 H I L CNN "data bus width"
+F11 "Integrated Circuits (ICs)" 0 1300 50 H I L CNN "device class L1"
+F12 "Embedded Processors and Controllers" 0 1400 50 H I L CNN "device class L2"
+F13 "Microcontrollers" 0 1500 50 H I L CNN "device class L3"
+F14 "MAINSTREAM ARM CORTEX-M0+ MCU WI" 0 1600 50 H I L CNN "digikey description"
+F15 "497-19552-ND" 0 1700 50 H I L CNN "digikey part number"
+F16 "64MHz" 0 1800 50 H I L CNN "frequency"
+F17 "1.75mm" 0 1900 50 H I L CNN "height"
+F18 "I2C,SPI,UART,USART,LIN,IrDA,I2S,SMBus" 0 2000 50 H I L CNN "interface"
+F19 "Yes" 0 2100 50 H I L CNN "lead free"
+F20 "386981de28d5613a" 0 2200 50 H I L CNN "library id"
+F21 "STMicroelectronics" 0 2300 50 H I L CNN "manufacturer"
+F22 "+105°C" 0 2400 50 H I L CNN "max junction temp"
+F23 "3.6V" 0 2500 50 H I L CNN "max supply voltage"
+F24 "32KBytes" 0 2600 50 H I L CNN "memory size"
+F25 "FLASH" 0 2700 50 H I L CNN "memory type"
+F26 "1.62V" 0 2800 50 H I L CNN "min supply voltage"
+F27 "511-STM32G031J6M6" 0 2900 50 H I L CNN "mouser part number"
+F28 "100mA" 0 3000 50 H I L CNN "nominal supply current"
+F29 "1" 0 3100 50 H I L CNN "number of A/D converters"
+F30 "8" 0 3200 50 H I L CNN "number of ADC channels"
+F31 "6" 0 3300 50 H I L CNN "number of I/Os"
+F32 "2" 0 3400 50 H I L CNN "number of I2C channels"
+F33 "2" 0 3500 50 H I L CNN "number of SPI channels"
+F34 "3" 0 3600 50 H I L CNN "number of UART channels"
+F35 "1" 0 3700 50 H I L CNN "number of cores"
+F36 "6" 0 3800 50 H I L CNN "number of timers/counters"
+F37 "SO8" 0 3900 50 H I L CNN "package"
+F38 "Yes" 0 4000 50 H I L CNN "rohs"
+F39 "0.1mm" 0 4100 50 H I L CNN "standoff height"
+F40 "+85°C" 0 4200 50 H I L CNN "temperature range high"
+F41 "-40°C" 0 4300 50 H I L CNN "temperature range low"
+DRAW
+X VDD/VDDA 2 100 0 100 R 40 40 1 1 W 
+X PB5/PB6/PA14-BOOT0/PA15 8 3100 0 100 L 40 40 1 1 B 
+X PB7/PB8/PB9/PC14-OSC32_IN 1 3100 -100 100 L 40 40 1 1 B 
+X PA0/PA1/PA2/~RST~ 4 100 -400 100 R 40 40 1 1 B 
+X PA8/PA11[PA9]/PB0/PB1 5 100 -500 100 R 40 40 1 1 B 
+X PA12[PA10] 6 100 -600 100 R 40 40 1 1 B 
+X PA13 7 100 -700 100 R 40 40 1 1 B 
+X VSS/VSSA 3 3100 -700 100 L 40 40 1 1 W 
+S 200 100 3000 -800 1 1 0 f
+ENDDRAW
+ENDDEF
+#
+# End Library
