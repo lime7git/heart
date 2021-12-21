@@ -1,0 +1,16 @@
+Small heart shape PCB with led diodes, that is battery powered and may be recharge with an USB cable. 
+
+1. RP2040 microcontroller.
+2. CR2032 battery, rechargable with an USB cable.
+3. Small PCB dimensions (something around 60x60cm), with a possible to use as a keychain.
+4. One small button to change modes, and one power switch.
+5. Protect from short circuit (fuse or something like this).
+6. WS2815 leds.
+7. Battery voltage sense.
+8. If not doing rechargable, protect from connect battery and vbus power supply at the same time. (Check TPS2113A ICs)
+
+
+
+################## NEW DESIGN
+
+Due to 
