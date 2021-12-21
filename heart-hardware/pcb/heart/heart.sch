@@ -1084,7 +1084,7 @@ F 3 "" H 9600 2800 50  0001 C CNN
 	1    9600 2800
 	1    0    0    -1  
 $EndComp
-Text Notes 1110 6640 0    197  ~ 39
+Text Notes 1730 -1190 0    197  ~ 39
 add decoupling capacitors!
 NoConn ~ 10000 3500
 NoConn ~ 10000 3400
@@ -1193,6 +1193,8 @@ F 3 "~" H 2600 5500 50  0001 C CNN
 	1    2600 5500
 	-1   0    0    1   
 $EndComp
-Text Notes 1140 6960 0    197  ~ 39
+Text Notes 1760 -870 0    197  ~ 39
 add test pads for current probe
+Text Notes 1720 -550 0    197  ~ 39
+check stm wakeup pins and connect to lis3dh interrupt lines\n
 $EndSCHEMATC
