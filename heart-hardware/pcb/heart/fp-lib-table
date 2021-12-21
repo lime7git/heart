@@ -1,4 +1,3 @@
 (fp_lib_table
-  (lib (name RP2040_minimal)(type KiCad)(uri ${KIPRJMOD}/additional-libs/rp2040/RP2040_minimal.pretty)(options "")(descr ""))
   (lib (name eec)(type KiCad)(uri ${KIPRJMOD}/additional-libs/stm32g0/eec.pretty)(options "")(descr ""))
 )
