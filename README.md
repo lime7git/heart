@@ -1,2 +1,2 @@
 # heart
- A small gift. Heart shape PCB with RP2040 microcontroller and some fancy leds.
+ A small gift. Heart shape PCB with STM32L0 microcontroller, gpio expander, accelerometer and some fancy leds.
