@@ -2,10 +2,10 @@
 
   (general
     (thickness 1.6)
-    (drawings 30)
+    (drawings 31)
     (tracks 0)
     (zones 0)
-    (modules 62)
+    (modules 63)
     (nets 64)
   )
 
@@ -19,7 +19,7 @@
     (33 F.Adhes user)
     (34 B.Paste user)
     (35 F.Paste user)
-    (36 B.SilkS user)
+    (36 B.SilkS user hide)
     (37 F.SilkS user)
     (38 B.Mask user)
     (39 F.Mask user)
@@ -57,8 +57,8 @@
     (mod_edge_width 0.15)
     (mod_text_size 1 1)
     (mod_text_width 0.15)
-    (pad_size 1.524 1.524)
-    (pad_drill 0.762)
+    (pad_size 4 4)
+    (pad_drill 0)
     (pad_to_mask_clearance 0)
     (aux_axis_origin 0 0)
     (visible_elements 7FFFFFFF)
@@ -226,6 +226,25 @@
     (add_net SWDIO)
     (add_net TCA6416A_RESET)
     (add_net VCC)
+  )
+
+  (module TestPoint:TestPoint_Pad_D4.0mm (layer F.Cu) (tedit 61C62D27) (tstamp 61C6E0FD)
+    (at 157.39872 147.83054)
+    (descr "SMD pad as test Point, diameter 4.0mm")
+    (tags "test point SMD pad")
+    (attr virtual)
+    (fp_text reference " " (at 0 -2.898) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value " " (at 0 3.1) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user %R (at 0 -2.9) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 2.5 0) (layer F.CrtYd) (width 0.05))
+    (fp_circle (center 0 0) (end 0 2.25) (layer F.SilkS) (width 0.12))
+    (pad 1 smd circle (at 0 0) (size 4 4) (layers F.Cu))
   )
 
   (module Button_Switch_SMD:SW_SPDT_PCM12 (layer B.Cu) (tedit 61C625C8) (tstamp 61C4975F)
@@ -2222,7 +2241,7 @@
   )
 
   (module Package_LGA:LGA-16_3x3mm_P0.5mm_LayoutBorder3x5y (layer F.Cu) (tedit 5D9F7937) (tstamp 61C497D4)
-    (at 140.26968 160.47174)
+    (at 157.39872 142.94794)
     (descr "LGA, 16 Pin (http://www.st.com/resource/en/datasheet/lis331hh.pdf), generated with kicad-footprint-generator ipc_noLead_generator.py")
     (tags "LGA NoLead")
     (path /61C356BF)
@@ -2292,7 +2311,7 @@
   )
 
   (module Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm (layer F.Cu) (tedit 5E476F32) (tstamp 61C497AF)
-    (at 134.60222 162.86734)
+    (at 157.39872 135.47432)
     (descr "TSSOP, 24 Pin (JEDEC MO-153 Var AD https://www.jedec.org/document_search?search_api_views_fulltext=MO-153), generated with kicad-footprint-generator ipc_gullwing_generator.py")
     (tags "TSSOP SO")
     (path /61C32B3D)
@@ -2375,7 +2394,7 @@
   )
 
   (module Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm (layer F.Cu) (tedit 5E476F32) (tstamp 61C49785)
-    (at 126.78664 162.20694)
+    (at 157.39872 126.2507)
     (descr "TSSOP, 20 Pin (JEDEC MO-153 Var AC https://www.jedec.org/document_search?search_api_views_fulltext=MO-153), generated with kicad-footprint-generator ipc_gullwing_generator.py")
     (tags "TSSOP SO")
     (path /61C303F2)
@@ -2679,6 +2698,9 @@
     )
   )
 
+  (gr_text "ADD TOUCH SWITCH!!!!!!" (at 156.84246 163.54044) (layer Dwgs.User)
+    (effects (font (size 5 5) (thickness 0.3)))
+  )
   (gr_text "OFF\n" (at 155.89504 146.69516 43) (layer B.SilkS) (tstamp 61C6169B)
     (effects (font (size 1.25 1.25) (thickness 0.25)) (justify mirror))
   )
