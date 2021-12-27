@@ -859,8 +859,6 @@ Wire Wire Line
 Wire Wire Line
 	9100 4300 8700 4300
 Wire Wire Line
-	3100 4300 2900 4300
-Wire Wire Line
 	9500 3900 9500 3800
 $Comp
 L power:+3V0 #PWR0115
@@ -980,7 +978,7 @@ F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/da
 	1    2400 4600
 	1    0    0    -1  
 $EndComp
-Text GLabel 3100 4300 2    50   Input ~ 0
+Text GLabel 1590 7130 2    50   Input ~ 0
 LIS3DH_INT2
 $Comp
 L Device:C_Small C3
@@ -1161,8 +1159,8 @@ $Comp
 L Jumper:SolderJumper_2_Open JP3
 U 1 1 61D85D1A
 P 3250 4700
-F 0 "JP3" H 3250 4905 50  0000 C CNN
-F 1 "Jumper" H 3250 4814 50  0000 C CNN
+F 0 "JP3" H 3250 4830 50  0000 C CNN
+F 1 "Jumper" H 3250 4780 50  0000 C CNN
 F 2 "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" H 3250 4700 50  0001 C CNN
 F 3 "~" H 3250 4700 50  0001 C CNN
 	1    3250 4700
@@ -1531,4 +1529,44 @@ Wire Wire Line
 	7300 5600 7910 5600
 Wire Wire Line
 	7600 5700 7910 5700
+Wire Wire Line
+	2900 4300 3100 4300
+$Comp
+L Jumper:SolderJumper_3_Open JP4
+U 1 1 61E88610
+P 1390 7130
+F 0 "JP4" H 1390 7335 50  0000 C CNN
+F 1 "SolderJumper_3_Open" H 1390 7244 50  0000 C CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm_NumberLabels" H 1390 7130 50  0001 C CNN
+F 3 "~" H 1390 7130 50  0001 C CNN
+	1    1390 7130
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2900 4200 3100 4200
+Text GLabel 3100 4200 2    50   Input ~ 0
+PA1
+Text GLabel 3100 4300 2    50   Input ~ 0
+PA2
+$Comp
+L Jumper:SolderJumper_3_Open JP5
+U 1 1 61EAF9B5
+P 3140 7130
+F 0 "JP5" H 3140 7335 50  0000 C CNN
+F 1 "SolderJumper_3_Open" H 3140 7244 50  0000 C CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm_NumberLabels" H 3140 7130 50  0001 C CNN
+F 3 "~" H 3140 7130 50  0001 C CNN
+	1    3140 7130
+	1    0    0    -1  
+$EndComp
+Text GLabel 3340 7130 2    50   Input ~ 0
+LIS3DH_INT2
+Text GLabel 1190 7130 0    50   Input ~ 0
+TOUCH_KEY_1
+Text GLabel 2940 7130 0    50   Input ~ 0
+TOUCH_KEY_1
+Text GLabel 1390 7280 3    50   Output ~ 0
+PA1
+Text GLabel 3140 7280 3    50   Output ~ 0
+PA2
 $EndSCHEMATC
