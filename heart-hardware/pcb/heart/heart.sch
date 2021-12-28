@@ -25,17 +25,6 @@ F 3 "" H 1690 1800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:Battery_Cell BT1
-U 1 1 61BFD73A
-P 1690 1670
-F 0 "BT1" H 1808 1766 50  0000 L CNN
-F 1 "CR2450" H 1808 1675 50  0000 L CNN
-F 2 "Battery:BatteryHolder_Keystone_3008_1x2450" V 1690 1730 50  0001 C CNN
-F 3 "~" V 1690 1730 50  0001 C CNN
-	1    1690 1670
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:VBAT #PWR0102
 U 1 1 61C0CB09
 P 1690 1390
@@ -1496,8 +1485,6 @@ Wire Wire Line
 Text Notes 6940 1830 0    50   ~ 0
 0-25pF
 Wire Wire Line
-	1690 1390 1690 1470
-Wire Wire Line
 	6700 4100 7910 4100
 Wire Wire Line
 	7000 4200 7910 4200
@@ -1569,4 +1556,17 @@ Text GLabel 1390 7280 3    50   Output ~ 0
 PA1
 Text GLabel 3140 7280 3    50   Output ~ 0
 PA2
+$Comp
+L Device:Battery_Cell BT1
+U 1 1 61BFD73A
+P 1690 1670
+F 0 "BT1" H 1808 1766 50  0000 L CNN
+F 1 "CR2450" H 1808 1675 50  0000 L CNN
+F 2 "Battery:BatteryHolder_Keystone_3008_1x2450" V 1690 1730 50  0001 C CNN
+F 3 "~" V 1690 1730 50  0001 C CNN
+	1    1690 1670
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1690 1390 1690 1470
 $EndSCHEMATC
