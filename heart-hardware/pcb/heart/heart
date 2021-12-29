@@ -1,0 +1,76 @@
+Source,C:\Users\Emil\Desktop\heart\heart\heart-hardware\pcb\heart\heart.sch
+Kicad Rev,Eeschema (5.1.9)-1
+Generated Date,29.12.2021 09:24:54
+
+Title,Not Set
+Company,Not Set
+Revision,Not Set
+Date Issue,Not Set
+
+Reference,Value,5V Tolerant IO,Code  JEDEC,Component Link 2 Description,Component Link 2 URL,Configuration Registers,Datasheet Version,I2C Address,Interrupt Output,Low Power,Max FrequencykHz,Mounting Technology,No of Outputs,Package Description,Package Version,Push Pull IO Type,Reset Input,Sub Family,VCC Max V,VCC Min V,Vcc rangeV,category,ciiva ids,f SCLK Max MHz,imported,library id,manufacturer,of IOs,package,release date,rohs,vault revision,Library,Library Ref
+SW1,SW_SPDT,Switch,SW_SPDT
+U2,TCA6416APWR,Yes,MO-153,Package Specification,http://www.ti.com/litv/pdf/mpds177g,Yes,SCPS194A,0100 00x,Yes,Yes,400,Surface Mount,16,24-Pin Thin Small Outline Package 0.65 mm Pitch,revG, Feb-2011,Yes,Yes,I2C IO Expander,5.5,1.65,1.65 to 5.5,IC,1159212,400,yes,847ff01043b459ee,Texas Instruments,16,PW0024A,1464327337,Yes,3F3BB855-6196-4AAB-B9FC-90EF6412B7AC,tca6416apwr,TCA6416APWR
+D3,LED,Device,LED
+D2,LED,Device,LED
+D1,LED,Device,LED
+D7,LED,Device,LED
+D4,LED,Device,LED
+D5,LED,Device,LED
+D6,LED,Device,LED
+C5,10nF,Device,C
+R21,10k,Device,R
+R0,R,Device,R
+R1,R,Device,R
+D11,LED,Device,LED
+D10,LED,Device,LED
+D9,LED,Device,LED
+D8,LED,Device,LED
+D15,LED,Device,LED
+D12,LED,Device,LED
+D13,LED,Device,LED
+D14,LED,Device,LED
+R23,10k,Device,R
+R22,10k,Device,R
+R2,R,Device,R
+R3,R,Device,R
+R4,R,Device,R
+R5,R,Device,R
+R8,R,Device,R
+R9,R,Device,R
+R10,R,Device,R
+R6,R,Device,R
+R7,R,Device,R
+R11,R,Device,R
+R12,R,Device,R
+R13,R,Device,R
+R14,R,Device,R
+R15,R,Device,R
+D0,LED,Device,LED
+R25,10k,Device,R
+R26,10k,Device,R
+J1,3V0,Connector_Generic,Conn_01x01
+J2,DIO,Connector_Generic,Conn_01x01
+J3,CLK,Connector_Generic,Conn_01x01
+J4,GND,Connector_Generic,Conn_01x01
+U1,STM32L031F6Px,MCU_ST_STM32L0,STM32L031F6Px
+C3,10nF,Device,C_Small
+C2,100nF,Device,C_Small
+C4,100nF,Device,C_Small
+C7,10nF,Device,C_Small
+C6,100nF,Device,C_Small
+JP3,Jumper,Jumper,SolderJumper_2_Open
+R24,R_Small,Device,R_Small
+U3,LIS3DH,Sensor_Motion,LIS3DH
+C9,100nF,Device,C_Small
+C8,10uF,Device,C_Small
+C0,47uF,Device,C_Small
+C1,100nF,Device,C_Small
+JP1,PWR,Jumper,SolderJumper_2_Open
+JP2,AMP,Jumper,SolderJumper_2_Open
+J5,TOUCH_KEY,Connector_Generic,Conn_01x01
+C11,100nF,Device,C_Small
+U4,Holtek-Semicon-BS812A-1,Sensor_Touch,Holtek-Semicon-BS812A-1
+C10,25pF,Device,C_Small
+JP4,SolderJumper_3_Open,Jumper,SolderJumper_3_Open
+JP5,SolderJumper_3_Open,Jumper,SolderJumper_3_Open
+BT1,CR2450,Device,Battery_Cell
