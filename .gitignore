@@ -33,3 +33,18 @@ fp-info-cache
 # Exported BOM files
 *.xml
 *.csv
+
+#HAL
+.pydevproject
+.project
+.cproject
+*.o
+*.pyc
+/bin
+/lib
+/objs
+*.depend
+.emacs.bak
+TAGS
+include.local.mk
+output
