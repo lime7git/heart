@@ -66,6 +66,7 @@
 	volatile uint8_t result = 128;
 	volatile uint8_t buffer = 0;
 	volatile HAL_StatusTypeDef hal_result;
+	volatile uint8_t key = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,31 +125,70 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 		
-				buffer = 0xF0;
-		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-		HAL_Delay(250);
-				buffer = 0xFF;
-		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-		HAL_Delay(250);
-				buffer = 0xF;
-		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-		HAL_Delay(250);
-				buffer = 0xFF;
-		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-		HAL_Delay(250);
+//				buffer = 0xF0;
+//		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+//		HAL_Delay(25);
+//				buffer = 0xFF;
+//		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+//		HAL_Delay(25);
+//				buffer = 0xF;
+//		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+//		HAL_Delay(25);
+//				buffer = 0xFF;
+//		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+//		HAL_Delay(25);
+//		
+//				buffer = 0xF0;
+//		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+//		HAL_Delay(25);
+//				buffer = 0xFF;
+//		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+//		HAL_Delay(25);
+//				buffer = 0xF;
+//		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+//		HAL_Delay(25);
+//				buffer = 0xFF;
+//		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+//		HAL_Delay(25);
+
+
+	if(HAL_GPIO_ReadPin(TOUCH_KEY_GPIO_Port,TOUCH_KEY_Pin) == RESET)
+	{
+		if(key == 0) key = 1;
+		else key = 0;
 		
-				buffer = 0xF0;
-		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-		HAL_Delay(250);
-				buffer = 0xFF;
-		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-		HAL_Delay(250);
-				buffer = 0xF;
-		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-		HAL_Delay(250);
-				buffer = 0xFF;
-		hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-		HAL_Delay(250);
+		HAL_Delay(50);
+	}
+
+	
+	if(key == 1)
+	{
+			for(uint8_t i = 0; i < 8; i++)
+			{
+				buffer = 0xFF & ~(1 << i);
+				hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+				HAL_Delay(25);
+			}
+			buffer = 0xFF;
+				hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+			for(uint8_t i = 0; i < 8; i++)
+			{
+				buffer = 0xFF & ~(1 << i);
+				hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+				HAL_Delay(25);
+			}
+			buffer = 0xFF;
+				hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+	}
+	
+		if(key == 0)
+	{
+		
+			buffer = 0x0;
+				hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+				hal_result = HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+	}
+	
 		
   }
   /* USER CODE END 3 */
