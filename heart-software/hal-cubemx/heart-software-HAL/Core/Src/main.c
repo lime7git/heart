@@ -129,7 +129,7 @@ int main(void)
 			mode++;
 			is_sequence_running = 1;
 			
-			if(mode > 4) mode = 0;
+			if(mode > 5) mode = 0;
 			
 			HAL_Delay(250);
 		}
@@ -232,7 +232,23 @@ int main(void)
 				buffer = 0xFF;
 					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
 					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+		}
+		if(mode == 5)
+		{
+			for(int i = 0; i < 3; i++)
+			{			
+				buffer = 0x0;
+					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
 				
+				HAL_Delay(500);
+				
+				buffer = 0xFF;
+					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
+				
+				HAL_Delay(500);
+			}	
 				
 				
 				mode = 0;
