@@ -16,6 +16,7 @@
 
 void Clock_Initialization(void);
 void SysTick_Handler(void);             // SysTick interrupt handler
-void Delay_Miliseconds(uint32_t ms);
+void Delay_Miliseconds(uint32_t miliseconds);
+uint32_t Get_Current_Milisecond_Tick(void);
 
 #endif /* !CLOCK_H */

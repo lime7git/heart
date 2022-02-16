@@ -1,6 +1,7 @@
 #include "clock.h" 
 
 volatile static uint32_t milisecond_tick;
+volatile static uint32_t delay_tick;
 
 void Clock_Initialization(void)
 {
@@ -10,15 +11,24 @@ void Clock_Initialization(void)
 
     SystemCoreClockUpdate();		
 	SysTick_Config(SystemCoreClock / SYSTICK_FREQUENCY_HZ);	
+
+    milisecond_tick = 0;
+    delay_tick = 0;
 }
 
 void SysTick_Handler(void)
 {
     milisecond_tick++;
+    delay_tick++;
 }
 
 void Delay_Miliseconds(uint32_t miliseconds)
 {
-    milisecond_tick = 0;
-    while(milisecond_tick < miliseconds){}
+    delay_tick = 0;
+    while(delay_tick < miliseconds){}
+}
+
+uint32_t Get_Current_Milisecond_Tick(void)
+{
+    return milisecond_tick;
 }

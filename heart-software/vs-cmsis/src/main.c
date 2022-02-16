@@ -13,8 +13,12 @@ int main(void)
     Clock_Initialization();
     I2C_Initialization();
 
+    uint8_t read_buffer;
+
+    I2C_Read(LIS3DH_READ_ADDRESS, LIS3DH_WHO_AM_I_REGISTER, &read_buffer, 1);
+
     while(true)
     {
-
+        
     }
 }
