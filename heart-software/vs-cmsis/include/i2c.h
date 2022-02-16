@@ -6,8 +6,8 @@
  */
 
 /* File i2c  */
-#ifndef I2C_H
-#define I2C_H
+#ifndef _I2C_H
+#define _I2C_H
 
 #include "stm32l031xx.h"
 #include "stm32l0xx.h"
@@ -21,6 +21,6 @@ void I2C_Initialization(void);
 void GPIO_Alternative_Function_Initialization(void);
 
 void I2C_Write(uint8_t device_address, uint8_t register_address, uint8_t *data_to_transfer, uint8_t data_to_transfer_size);
-void I2C_Read(uint8_t device_address, uint8_t register_address, uint8_t *data_to_recieve, uint8_t data_to_recieve_size);
+void I2C_Read(uint8_t device_address, uint8_t register_address, uint8_t *data_receieved, uint8_t data_received_size);
 
 #endif /* !I2C_H */

@@ -12,6 +12,7 @@ int main(void)
     
     Clock_Initialization();
     I2C_Initialization();
+    TCA6416A_Initialization();
 
     uint8_t read_buffer;
 

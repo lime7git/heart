@@ -6,8 +6,8 @@
  */
 
 /* File clock  */
-#ifndef CLOCK_H
-#define CLOCK_H
+#ifndef _CLOCK_H
+#define _CLOCK_H
 
 #include "stm32l031xx.h"
 #include "stm32l0xx.h"
