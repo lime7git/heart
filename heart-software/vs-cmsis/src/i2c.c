@@ -24,21 +24,26 @@ void I2C_Write(uint8_t device_address, uint8_t register_address, uint8_t *data_t
     I2C1->CR2 = (device_address << I2C_CR2_SADD_Pos) | I2C_TRANSFER_DIRECTION_WIRTE | ((0x1 + data_to_transfer_size) << I2C_CR2_NBYTES_Pos) | I2C_CR2_AUTOEND;
 	I2C1->CR2 |= I2C_CR2_START;
 
-	while((I2C1->ISR & I2C_ISR_TXIS) == RESET) {}
+	while((I2C1->ISR & I2C_ISR_TXIS) == RESET){}
 	I2C1->TXDR = register_address;
 	
-	while((I2C1->ISR & I2C_ISR_TXIS) == RESET) {}
+	while((I2C1->ISR & I2C_ISR_TXIS) == RESET){}
 	I2C1->TXDR = *data_to_transfer;	
 }
 
 void I2C_Read(uint8_t device_address, uint8_t register_address, uint8_t *data_to_recieve, uint8_t data_to_recieve_size)
 {
-    I2C1->CR2 = (device_address << I2C_CR2_SADD_Pos) | I2C_TRANSFER_DIRECTION_READ | ((0x1 + data_to_recieve_size) << I2C_CR2_NBYTES_Pos) | I2C_CR2_AUTOEND;
+    I2C1->CR2 = (device_address << I2C_CR2_SADD_Pos) | I2C_TRANSFER_DIRECTION_WIRTE | (0x1 << I2C_CR2_NBYTES_Pos) | I2C_CR2_AUTOEND;
 	I2C1->CR2 |= I2C_CR2_START;
 
-	while((I2C1->ISR & I2C_ISR_TXIS) == RESET) {}
+	while((I2C1->ISR & I2C_ISR_TXIS) == RESET){}
 	I2C1->TXDR = register_address;
+
+    while((I2C1->ISR & I2C_ISR_TC) == RESET){}
+
+    I2C1->CR2 = (device_address << I2C_CR2_SADD_Pos) | I2C_TRANSFER_DIRECTION_READ | (data_to_recieve_size << I2C_CR2_NBYTES_Pos) | I2C_CR2_AUTOEND;
+	I2C1->CR2 |= I2C_CR2_START;
 	
-	while((I2C1->ISR & I2C_ISR_TXIS) == RESET) {}
+	while((I2C1->ISR & I2C_ISR_RXNE) == RESET){}
 	*data_to_recieve = I2C1->RXDR;	
 }
