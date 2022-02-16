@@ -9,6 +9,10 @@
 #ifndef I2C_H
 #define I2C_H
 
+#include "stm32l031xx.h"
+#include "stm32l0xx.h"
 
+void I2C_Initialization(void);
+void GPIO_Alternative_Function_Initialization(void);
 
 #endif /* !I2C_H */

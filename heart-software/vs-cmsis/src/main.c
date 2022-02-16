@@ -9,8 +9,9 @@
 
 int main(void)
 {
-
     
+    Clock_Initialization();
+    I2C_Initialization();
 
     while(true)
     {
