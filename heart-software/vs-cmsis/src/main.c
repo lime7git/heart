@@ -9,7 +9,6 @@
 
 //uint8_t read_buffer;
 uint32_t tick_debug;
-extern uint32_t clock_after;
 
 int main(void)
 {
