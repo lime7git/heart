@@ -330,12 +330,12 @@ ARM Macro Assembler    Page 6
 
 
 work --depend=heart-software-hal\startup_stm32l031xx.d -oheart-software-hal\sta
-rtup_stm32l031xx.o -I.\RTE\_heart-software-HAL -IC:\Users\Emil\AppData\Local\Ar
-m\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\Emil\AppData\Local\Arm\Pa
-cks\Keil\STM32L0xx_DFP\2.2.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include --predef
-ine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERS
-ION SETA 531" --predefine="_RTE_ SETA 1" --predefine="STM32L031xx SETA 1" --pre
-define="_RTE_ SETA 1" --list=startup_stm32l031xx.lst startup_stm32l031xx.s
+rtup_stm32l031xx.o -I.\RTE\_heart-software-HAL -ID:\Programy\ARM-Keil\Keil_v5\P
+acks\ARM\CMSIS\5.8.0\CMSIS\Core\Include -ID:\Programy\ARM-Keil\Keil_v5\Packs\Ke
+il\STM32L0xx_DFP\2.2.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include --predefine="_
+_EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SE
+TA 536" --predefine="_RTE_ SETA 1" --predefine="STM32L031xx SETA 1" --predefine
+="_RTE_ SETA 1" --list=startup_stm32l031xx.lst startup_stm32l031xx.s
 
 
 

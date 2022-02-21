@@ -7,14 +7,14 @@ heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_def
 heart-software-hal\main.o: ../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h
 heart-software-hal\main.o: ../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l031xx.h
 heart-software-hal\main.o: ../Drivers/CMSIS/Include/core_cm0plus.h
-heart-software-hal\main.o: H:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+heart-software-hal\main.o: D:\Programy\ARM-Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 heart-software-hal\main.o: ../Drivers/CMSIS/Include/cmsis_version.h
 heart-software-hal\main.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 heart-software-hal\main.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 heart-software-hal\main.o: ../Drivers/CMSIS/Device/ST/STM32L0xx/Include/system_stm32l0xx.h
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal.h
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-heart-software-hal\main.o: H:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+heart-software-hal\main.o: D:\Programy\ARM-Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rcc_ex.h
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_exti.h
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_gpio.h
@@ -30,4 +30,4 @@ heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr_ex.h
 heart-software-hal\main.o: ../Core/Inc/i2c.h
 heart-software-hal\main.o: ../Core/Inc/gpio.h
-heart-software-hal\main.o: H:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+heart-software-hal\main.o: D:\Programy\ARM-Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
