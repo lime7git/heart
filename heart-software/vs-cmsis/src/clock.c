@@ -3,13 +3,19 @@
 volatile static uint32_t milisecond_tick;
 volatile static uint32_t delay_tick;
 
+uint32_t clock_before;
+uint32_t clock_after;
+
 void Clock_Initialization(void)
 {
     SystemCoreClockUpdate();
+    clock_before = SystemCoreClock;
 
-    RCC->ICSCR |= (0x4 << RCC_ICSCR_MSIRANGE_Pos);  // MSI frequency around 1.048 MHz
+    RCC->ICSCR |= (0x0 << RCC_ICSCR_MSIRANGE_Pos);  // MSI frequency around 1.048 MHz
 
-    SystemCoreClockUpdate();		
+    SystemCoreClockUpdate();	
+    clock_after = SystemCoreClock;	
+
 	SysTick_Config(SystemCoreClock / SYSTICK_FREQUENCY_HZ);	
 
     milisecond_tick = 0;
