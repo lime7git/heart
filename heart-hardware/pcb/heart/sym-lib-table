@@ -1,4 +1,5 @@
 (sym_lib_table
   (lib (name eec)(type Legacy)(uri ${KIPRJMOD}/additional-libs/stm32g0/eec.lib)(options "")(descr ""))
   (lib (name tca6416apwr)(type Legacy)(uri ${KIPRJMOD}/additional-libs/tca6416APWR/eec.lib)(options "")(descr ""))
+  (lib (name heart-rescue)(type Legacy)(uri ${KIPRJMOD}/heart-rescue.lib)(options "")(descr ""))
 )
