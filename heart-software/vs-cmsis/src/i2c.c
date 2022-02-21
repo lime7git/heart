@@ -1,3 +1,10 @@
+/**
+ * @file i2c.c
+ * @author lime7git
+ * @date 16.02.2022
+ * @brief i2c source file
+ */
+
 #include "i2c.h"
 
 void I2C_Initialization(void)

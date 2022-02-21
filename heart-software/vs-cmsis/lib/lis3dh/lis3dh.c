@@ -1,3 +1,10 @@
+/**
+ * @file lis3dh.c
+ * @author lime7git
+ * @date 16.02.2022
+ * @brief lis3dh source file
+ */
+
 #include "lis3dh.h"
 
 void LIS3DH_Initialization(void)

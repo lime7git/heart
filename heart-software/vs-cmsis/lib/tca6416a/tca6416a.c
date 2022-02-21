@@ -1,3 +1,10 @@
+/**
+ * @file tca6416a.c
+ * @author lime7git
+ * @date 16.02.2022
+ * @brief tca6416a source file
+ */
+
 #include "tca6416a.h"
 
 void TCA6416A_Initialization(void)

@@ -1,3 +1,10 @@
+/**
+ * @file clock.c
+ * @author lime7git
+ * @date 16.02.2022
+ * @brief Clock source file
+ */
+
 #include "clock.h" 
 
 volatile static uint32_t milisecond_tick;
