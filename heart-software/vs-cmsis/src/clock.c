@@ -12,7 +12,7 @@ volatile static uint32_t delay_tick;
 
 void Clock_Initialization(void)
 {
-    MODIFY_REG(RCC->ICSCR, RCC_ICSCR_MSIRANGE, RCC_ICSCR_MSIRANGE_2); // MSI frequency 262.144 kHz
+//    MODIFY_REG(RCC->ICSCR, RCC_ICSCR_MSIRANGE, RCC_ICSCR_MSIRANGE_4); // MSI frequency 1.048 MHz
 
     SystemCoreClockUpdate();	
 	SysTick_Config(SystemCoreClock / SYSTICK_FREQUENCY_HZ);	

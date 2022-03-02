@@ -7,21 +7,51 @@
 
 #include "main.h"
 
-//uint8_t read_buffer;
-uint32_t tick_debug;
-
 int main(void)
 {
-    
     Clock_Initialization();
-   // I2C_Initialization();
-   // TCA6416A_Initialization();
-    
-    // I2C_Read(LIS3DH_READ_ADDRESS, LIS3DH_WHO_AM_I_REGISTER, &read_buffer, 1);
+    I2C_Initialization();
+
+		I2C1->CR2 = 0x0;
+		I2C1->CR2 = (0x40 << I2C_CR2_SADD_Pos) | (2 << I2C_CR2_NBYTES_Pos) | I2C_CR2_AUTOEND | I2C_CR2_START;
+
+		while((I2C1->ISR & I2C_ISR_TXIS) == RESET){}
+
+		if((I2C1->ISR & I2C_ISR_TXE) == (I2C_ISR_TXE))
+		{
+		I2C1->TXDR = 0x07;
+		}
+		
+		while((I2C1->ISR & I2C_ISR_TXIS) == RESET){}
+
+		if((I2C1->ISR & I2C_ISR_TXE) == (I2C_ISR_TXE))
+		{
+		I2C1->TXDR = 0x0;
+		}
+
+		Delay_Miliseconds(10);
+
+		I2C1->CR2 = 0x0;
+		I2C1->CR2 = (0x40 << I2C_CR2_SADD_Pos) | (2 << I2C_CR2_NBYTES_Pos) | I2C_CR2_AUTOEND | I2C_CR2_START;
+
+		while((I2C1->ISR & I2C_ISR_TXIS) == RESET){}
+
+		if((I2C1->ISR & I2C_ISR_TXE) == (I2C_ISR_TXE))
+		{
+		I2C1->TXDR = 0x03;
+		}
+
+		while((I2C1->ISR & I2C_ISR_TXIS) == RESET){}
+
+		if((I2C1->ISR & I2C_ISR_TXE) == (I2C_ISR_TXE))
+		{
+		I2C1->TXDR = 0xFF;
+		}
 
     while(true)
     {
-        tick_debug++;
-        Delay_Miliseconds(2000);
+
+
+
     }
 }

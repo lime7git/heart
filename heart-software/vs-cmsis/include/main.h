@@ -16,7 +16,8 @@
 
 #include "clock.h"
 #include "i2c.h"
-#include "lis3dh.h"
-#include "tca6416a.h"
+
+// #include "lis3dh.h"
+ #include "tca6416a.h"
 
 #endif /* !MAIN_H */

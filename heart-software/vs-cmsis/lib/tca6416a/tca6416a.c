@@ -25,10 +25,10 @@ void TCA6416A_Read(uint8_t register_address, uint8_t *data_received)
 
 void TCA6416A_Set_Port_0_As_Output(void)
 {
-    TCA6416A_Write(TCA6416A_CONFIGURATION_0_ADDRESS, 0x0);
+    TCA6416A_Write(TCA6416A_CONFIGURATION_0_ADDRESS, (uint8_t *)0x0);
 }
 
 void TCA6416A_Set_Port_1_As_Output(void)
 {
-    TCA6416A_Write(TCA6416A_CONFIGURATION_1_ADDRESS, 0x0);
+    TCA6416A_Write(TCA6416A_CONFIGURATION_1_ADDRESS, (uint8_t *)0x0);
 }
