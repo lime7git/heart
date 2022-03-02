@@ -58,12 +58,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define ACC_INT2_Pin GPIO_PIN_1
-#define ACC_INT2_GPIO_Port GPIOA
-#define TOUCH_KEY_Pin GPIO_PIN_2
-#define TOUCH_KEY_GPIO_Port GPIOA
-#define TEST_PIN_Pin GPIO_PIN_5
-#define TEST_PIN_GPIO_Port GPIOA
+#define LIS3DH_INT1_Pin GPIO_PIN_0
+#define LIS3DH_INT1_GPIO_Port GPIOA
+#define LIS3DH_INT2_Pin GPIO_PIN_1
+#define LIS3DH_INT2_GPIO_Port GPIOA
+#define TOUCH_BUTTON_Pin GPIO_PIN_2
+#define TOUCH_BUTTON_GPIO_Port GPIOA
+#define TCA6416A_RESET_Pin GPIO_PIN_6
+#define TCA6416A_RESET_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
