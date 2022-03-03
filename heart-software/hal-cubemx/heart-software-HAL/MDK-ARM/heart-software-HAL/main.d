@@ -33,5 +33,7 @@ heart-software-hal\main.o: ../Core/Inc/gpio.h
 heart-software-hal\main.o: ..\Drivers\TCA6416A\tca6416a.h
 heart-software-hal\main.o: ..\Drivers\LIS3DH\lis3dh.h
 heart-software-hal\main.o: ../Core/Inc/sequencies.h
-heart-software-hal\main.o: D:\Programy\ARM-Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 heart-software-hal\main.o: D:\Programy\ARM-Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+heart-software-hal\main.o: D:\Programy\ARM-Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+heart-software-hal\main.o: D:\Programy\ARM-Keil\Keil_v5\ARM\ARMCC\Bin\..\include\time.h
+heart-software-hal\main.o: D:\Programy\ARM-Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h

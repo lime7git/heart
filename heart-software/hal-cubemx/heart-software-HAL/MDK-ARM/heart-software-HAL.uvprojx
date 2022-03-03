@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32L031xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32L0xx_HAL_Driver/Inc;../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32L0xx/Include;../Drivers/CMSIS/Include;..\Drivers\LIS3DH;..\Drivers\TCA6416A</IncludePath>
+              <IncludePath>../Core/Inc; ../Drivers/STM32L0xx_HAL_Driver/Inc; ../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy; ../Drivers/CMSIS/Device/ST/STM32L0xx/Include; ../Drivers/CMSIS/Include; ..\Drivers\LIS3DH; ..\Drivers\TCA6416A</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -394,6 +394,16 @@
           <GroupName>Application/User/Core</GroupName>
           <Files>
             <File>
+              <FileName>sequencies.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\sequencies.c</FilePath>
+            </File>
+            <File>
+              <FileName>sequencies.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\sequencies.h</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/main.c</FilePath>
@@ -417,16 +427,6 @@
               <FileName>stm32l0xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32l0xx_hal_msp.c</FilePath>
-            </File>
-            <File>
-              <FileName>sequencies.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\sequencies.c</FilePath>
-            </File>
-            <File>
-              <FileName>sequencies.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\sequencies.h</FilePath>
             </File>
           </Files>
         </Group>

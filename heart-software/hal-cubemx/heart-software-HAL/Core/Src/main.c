@@ -28,7 +28,7 @@
 #include "lis3dh.h"
 #include "sequencies.h"
 
-#include "stdio.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,10 +49,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-	volatile uint8_t read_buffer = 0;
-	volatile uint8_t buffer = 0;
-	volatile uint8_t mode = 0;
-	volatile uint8_t is_sequence_running = 0;
 
 	
 /* USER CODE END PV */
@@ -104,9 +100,10 @@ int main(void)
 	
 	Sequency_Initialization();
 	
-	Set_Sequency(SEQUENCY_1);
+	Set_Sequency(SEQUENCY_INIT);
 	Run_Current_Sequency();
-		
+	
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -116,127 +113,20 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	/*
-	while(!is_sequence_running)
-	{
-		if(HAL_GPIO_ReadPin(TOUCH_BUTTON_GPIO_Port,TOUCH_BUTTON_Pin) == RESET)
-		{
-			mode++;
-			is_sequence_running = 1;
-			
-			if(mode > 5) mode = 0;
-			
-			HAL_Delay(250);
-		}
-	}
-		
-		
 	
-
-	
-	
-	while(is_sequence_running)
-	{
-		if(mode == 0)
-		{
+			if(HAL_GPIO_ReadPin(TOUCH_BUTTON_GPIO_Port,TOUCH_BUTTON_Pin) == RESET)
+			{
+				HAL_Delay(25);
+				
+				if(HAL_GPIO_ReadPin(TOUCH_BUTTON_GPIO_Port,TOUCH_BUTTON_Pin) == RESET)
+				{
+				TCA6416A_Disable_All_LEDs();
+				HAL_Delay(250);
+				Set_Sequency(SEQUENCY_2);
+				Run_Current_Sequency();
+				HAL_Delay(250);
+				}
 			}
-		else if(mode == 1)
-		{
-				}
-		else if(mode == 2)
-		{
-				for(int i = 7; i >= 0; i--)
-				{
-					buffer = 0xFF & ~(1 << i);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_Delay(25);
-				}
-				buffer = 0xFF;
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-				
-				for(int i = 7; i >= 0; i--)
-				{
-					buffer = 0xFF & ~(1 << i);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_Delay(25);
-				}
-				buffer = 0xFF;
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-		}
-		if(mode == 3)
-		{
-				buffer = 0x0;
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-		}
-		if(mode == 4)
-		{
-				for(uint8_t i = 0; i < 8; i++)
-				{
-					buffer = 0xFF & ~(1 << i);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_Delay(75);
-				}
-				buffer = 0xFF;
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-				for(uint8_t i = 0; i < 8; i++)
-				{
-					buffer = 0xFF & ~(1 << i);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_Delay(75);
-				}
-				buffer = 0xFF;
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-				for(int i = 7; i >= 0; i--)
-				{
-					buffer = 0xFF & ~(1 << i);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_Delay(25);
-				}
-				buffer = 0xFF;
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-				for(int i = 7; i >= 0; i--)
-				{
-					buffer = 0xFF & ~(1 << i);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_Delay(25);
-				}
-				buffer = 0xFF;
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-		}
-		if(mode == 5)
-		{
-			for(int i = 0; i < 3; i++)
-			{			
-				buffer = 0x0;
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-				
-				HAL_Delay(500);
-				
-				buffer = 0xFF;
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_0_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-					HAL_I2C_Mem_Write(&hi2c1, TCA6416A_WRITE_ADDRESS, TCA6416A_OUTPUT_PORT_1_ADDRESS, 1, (uint8_t *)&buffer, sizeof(buffer), HAL_MAX_DELAY);
-				HAL_Delay(500);
-			}	
-				
-				
-				mode = 0;
-		}
-		
-		is_sequence_running = 0;
-	}
-	*/
-	
-		
   }
   /* USER CODE END 3 */
 }
@@ -260,7 +150,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
-  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_3;
+  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_5;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -323,4 +213,3 @@ void assert_failed(uint8_t *file, uint32_t line)
 }
 #endif /* USE_FULL_ASSERT */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -4,6 +4,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "tca6416a.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "stdbool.h"
 
 typedef enum 
@@ -19,7 +23,8 @@ typedef enum
 		SEQUENCY_8,
 		SEQUENCY_9,
 		SEQUENCY_10,
-		SEQUENCY_LAST
+		SEQUENCY_LAST,
+		SEQUENCY_INIT
 	
 } SEQUENCIES;
 
@@ -59,7 +64,6 @@ SEQUENCIES Get_Current_Sequency(void);
   * @retval None
   */
 void Run_Current_Sequency(void);
-
 
 
 

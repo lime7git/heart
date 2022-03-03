@@ -7,7 +7,7 @@
 
 #include "sequencies.h"
 
-sSEQUENCY SEQUENCY;
+volatile sSEQUENCY SEQUENCY;
 
 void Sequency_Initialization(void)
 {
@@ -34,6 +34,7 @@ void Run_Current_Sequency(void)
 	{		
 		SEQUENCY.is_sequency_running = true;
 		SEQUENCY.previous_sequency = Get_Current_Sequency();
+		TCA6416A_Disable_All_LEDs();
 		
 		switch (Get_Current_Sequency())
 		{
@@ -60,26 +61,72 @@ void Run_Current_Sequency(void)
 			}
 			
 			case SEQUENCY_2 : {
+				for(int i = 7; i >= 0; i--)
+				{
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, (0xFF & ~(1 << i)));
+					HAL_Delay(25);
+				}
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 0xFF);
 				
-				
+				for(int i = 7; i >= 0; i--)
+				{
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, (0xFF & ~(1 << i)));
+					HAL_Delay(25);
+				}
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 0xFF);
 			break;
 			}
 			
 			case SEQUENCY_3 : {
-				
-				
+				TCA6416A_Enable_All_LEDs();
+				HAL_Delay(250);
 			break;
 			}
 			
 			case SEQUENCY_4 : {
+				for(uint8_t i = 0; i < 8; i++)
+				{
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, (0xFF & ~(1 << i)));
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, (0xFF & ~(1 << i)));
+					HAL_Delay(75);
+				}
+				TCA6416A_Disable_All_LEDs();
 				
+				for(uint8_t i = 0; i < 8; i++)
+				{
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, (0xFF & ~(1 << i)));
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, (0xFF & ~(1 << i)));
+					HAL_Delay(75);
+				}
+				TCA6416A_Disable_All_LEDs();
 				
+				for(int i = 7; i >= 0; i--)
+				{
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, (0xFF & ~(1 << i)));
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, (0xFF & ~(1 << i)));
+					HAL_Delay(25);
+				}
+				TCA6416A_Disable_All_LEDs();
+				
+				for(int i = 7; i >= 0; i--)
+				{
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, (0xFF & ~(1 << i)));
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, (0xFF & ~(1 << i)));
+					HAL_Delay(25);
+				}
+				TCA6416A_Disable_All_LEDs();
 			break;
 			}
 			
 			case SEQUENCY_5 : {
-				
-				
+				for(int i = 0; i < 3; i++)
+				{			
+					TCA6416A_Enable_All_LEDs();
+					HAL_Delay(500);
+					
+					TCA6416A_Disable_All_LEDs();
+					HAL_Delay(500);
+				}	
 			break;
 			}
 			
@@ -118,6 +165,29 @@ void Run_Current_Sequency(void)
 				
 			break;
 			}
+			
+			case SEQUENCY_INIT : {
+				for(int i = 0; i < 8; i ++)
+				{
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, (0xFF & ~(1 << i)));
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, (0xFF & ~(1 << abs((i - 7)))));
+					HAL_Delay(150);
+				}
+				for(int i = 7; i >= 0; i--)
+				{
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, (0xFF & ~(1 << i)));
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, (0xFF & ~(1 << abs((i - 7)))));
+					HAL_Delay(150);
+				}
+				
+				TCA6416A_Disable_All_LEDs();			
+				HAL_Delay(150);
+				TCA6416A_Enable_All_LEDs();			
+				HAL_Delay(1000);
+				
+			break;
+			}
+			
 			default : {
 				
 			}
