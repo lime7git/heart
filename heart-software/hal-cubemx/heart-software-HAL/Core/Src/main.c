@@ -100,8 +100,8 @@ int main(void)
 	
 	Sequency_Initialization();
 	
-	Set_Sequency(SEQUENCY_INIT);
-	Run_Current_Sequency();
+	//Set_Sequency(SEQUENCY_INIT);
+	//Run_Current_Sequency();
 	
 
   /* USER CODE END 2 */
@@ -120,11 +120,12 @@ int main(void)
 				
 				if(HAL_GPIO_ReadPin(TOUCH_BUTTON_GPIO_Port,TOUCH_BUTTON_Pin) == RESET)
 				{
-				TCA6416A_Disable_All_LEDs();
-				HAL_Delay(250);
-				Set_Sequency(SEQUENCY_2);
-				Run_Current_Sequency();
-				HAL_Delay(250);
+					for(int i = 1; i <= Get_Number_of_Sequencies(); i++)
+					{
+						Set_Sequency((SEQUENCIES)i);
+						Run_Current_Sequency();
+						HAL_Delay(250);
+					}
 				}
 			}
   }

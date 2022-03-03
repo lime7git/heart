@@ -59,6 +59,13 @@ void Set_Sequency(SEQUENCIES sequency);
 SEQUENCIES Get_Current_Sequency(void);
 
 /**
+  * @brief  Get number of sequencies
+  * @param  None
+  * @retval Current sequency
+  */
+int Get_Number_of_Sequencies(void);
+
+/**
   * @brief  Run current sequency
   * @param  None
   * @retval None

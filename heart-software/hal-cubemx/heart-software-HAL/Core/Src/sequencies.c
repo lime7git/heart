@@ -28,6 +28,11 @@ SEQUENCIES Get_Current_Sequency(void)
 	return SEQUENCY.current_sequency;
 }
 
+int Get_Number_of_Sequencies(void)
+{
+	return SEQUENCY.number_of_sequencies;
+}
+
 void Run_Current_Sequency(void)
 {
 	if(!SEQUENCY.is_sequency_running)
@@ -131,31 +136,146 @@ void Run_Current_Sequency(void)
 			}
 			
 			case SEQUENCY_6 : {
-				
-				
+				uint8_t leds = 255;
+				leds -= 129;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(250);
+				leds -= 66;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(250);
+				leds -= 36;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(250);
+				leds -= 24;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(500);		
 			break;
 			}
 			
 			case SEQUENCY_7 : {
-				
-				
+				uint8_t leds = 255;
+				leds -= 129;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(250);
+				leds -= 66;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(250);
+				leds -= 36;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(250);
+				leds -= 24;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(750);		
+				leds += 129;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(250);
+				leds += 66;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(250);
+				leds += 36;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(250);
+				leds += 24;
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds);
+				HAL_Delay(750);		
 			break;
 			}
 			
 			case SEQUENCY_8 : {
+				uint8_t leds_left = 240;
+				uint8_t leds_right = 15;
 				
-				
+				for(int i = 0; i < 3; i ++)
+				{
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_left);
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_right);
+					HAL_Delay(250);
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_right);
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_left);
+					HAL_Delay(250);
+					leds_left = 255;
+					leds_right = 0;
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_left);
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_right);
+					HAL_Delay(250);
+					leds_left = 0;
+					leds_right = 255;
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_left);
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_right);
+					HAL_Delay(250);
+				}
 			break;
 			}
 			
 			case SEQUENCY_9 : {
-				
+				for(int i = 0; i < 5; i++)
+				{
+					for(int i = 7; i >= 1; i -= 2)
+					{
+						TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, ((0xFF & ~(1 << i)) & ~(1 << (i - 1))));
+						HAL_Delay(50);
+					}
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 0xFF);
+					
+					for(int i = 7; i >= 1; i -= 2)
+					{
+						TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, ((0xFF & ~(1 << i)) & ~(1 << (i - 1))));
+						HAL_Delay(50);
+					}
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 0xFF);
+				}
 				
 			break;
 			}
 			
 			case SEQUENCY_10 : {
 				
+				TCA6416A_Enable_All_LEDs();
+				
+				HAL_Delay(1000);
+				uint8_t leds_left = 15;
+				uint8_t leds_right = 240;
+				for(int i = 0; i < 3; i++)
+				{
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_left);
+					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_right);
+					HAL_Delay(500);
+					TCA6416A_Enable_All_LEDs();
+					HAL_Delay(500);
+				}
+				
+				leds_left = 254;
+				leds_right = 79;
+		
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_left);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_right);
+				HAL_Delay(2000);
+				
+				leds_left = 255;
+				leds_right = 111;
+		
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_left);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_right);
+				HAL_Delay(2000);
+				
+				leds_left = 254;
+				leds_right = 239;
+		
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_left);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_right);
+				HAL_Delay(2000);
 				
 			break;
 			}
