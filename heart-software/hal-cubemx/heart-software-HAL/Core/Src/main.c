@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
+#include "rtc.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -49,8 +50,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+	RTC_TimeTypeDef currTime = {0};
+	RTC_DateTypeDef currDate = {0};
 	
+	uint8_t random;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -93,16 +96,21 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 		
+	SystemCoreClockUpdate();
+	
 	TCA6416A_Initialization();
 	TCA6416A_Disable_All_LEDs();
 	
 	Sequency_Initialization();
 	
-	//Set_Sequency(SEQUENCY_INIT);
-	//Run_Current_Sequency();
+	Set_Sequency(SEQUENCY_INIT);
+	Run_Current_Sequency();
 	
+	HAL_SuspendTick();
+	HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 
   /* USER CODE END 2 */
 
@@ -120,12 +128,18 @@ int main(void)
 				
 				if(HAL_GPIO_ReadPin(TOUCH_BUTTON_GPIO_Port,TOUCH_BUTTON_Pin) == RESET)
 				{
-					for(int i = 1; i <= Get_Number_of_Sequencies(); i++)
-					{
-						Set_Sequency((SEQUENCIES)i);
-						Run_Current_Sequency();
-						HAL_Delay(250);
-					}
+					
+					HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
+					HAL_RTC_GetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
+					
+					random = currTime.Seconds % 10;
+					
+					if(random == 0) random = 10;
+					if(random > Get_Number_of_Sequencies()) random = Get_Number_of_Sequencies();
+					
+					Set_Sequency((SEQUENCIES)random);
+					Run_Current_Sequency();
+			
 				}
 			}
   }
@@ -148,10 +162,11 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
-  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_5;
+  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_2;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -170,8 +185,9 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_RTC;
   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
