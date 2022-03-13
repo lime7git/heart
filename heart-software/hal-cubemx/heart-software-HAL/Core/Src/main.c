@@ -20,7 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
-#include "rtc.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -30,6 +30,7 @@
 #include "sequencies.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,10 +51,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-	RTC_TimeTypeDef currTime = {0};
-	RTC_DateTypeDef currDate = {0};
-	
-	uint8_t random;
+	bool button_pressed = false;
+	int random_number = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -96,10 +95,12 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_RTC_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 		
 	SystemCoreClockUpdate();
+	
+	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_3);
 	
 	TCA6416A_Initialization();
 	TCA6416A_Disable_All_LEDs();
@@ -108,9 +109,6 @@ int main(void)
 	
 	Set_Sequency(SEQUENCY_INIT);
 	Run_Current_Sequency();
-	
-	HAL_SuspendTick();
-	HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 
   /* USER CODE END 2 */
 
@@ -121,27 +119,15 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	
-			if(HAL_GPIO_ReadPin(TOUCH_BUTTON_GPIO_Port,TOUCH_BUTTON_Pin) == RESET)
-			{
-				HAL_Delay(25);
-				
-				if(HAL_GPIO_ReadPin(TOUCH_BUTTON_GPIO_Port,TOUCH_BUTTON_Pin) == RESET)
-				{
-					
-					HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
-					HAL_RTC_GetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
-					
-					random = currTime.Seconds % 10;
-					
-					if(random == 0) random = 10;
-					if(random > Get_Number_of_Sequencies()) random = Get_Number_of_Sequencies();
-					
-					Set_Sequency((SEQUENCIES)random);
-					Run_Current_Sequency();
-			
-				}
-			}
+		
+		if(button_pressed == true)
+		{
+				button_pressed = false;
+				Set_Sequency((SEQUENCIES)random_number);
+				Run_Current_Sequency();
+		}
+		
+		
   }
   /* USER CODE END 3 */
 }
@@ -162,8 +148,7 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_MSI;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
   RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_2;
@@ -185,9 +170,8 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_RTC;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
-  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
@@ -195,6 +179,62 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+uint32_t IC_Val1 = 0;
+uint32_t IC_Val2 = 0;
+uint32_t Difference = 0;
+int Is_First_Captured = 0;
+uint32_t usWidth = 0;
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)  // if the interrupt source is channel1
+	{
+		
+		if(!Is_Sequency_Running())
+		{
+			if (Is_First_Captured==0) // if the first value is not captured
+			{
+				IC_Val1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3); // read the first value
+				Is_First_Captured = 1;  // set the first captured as true
+			}
+
+			else   // if the first is already captured
+			{
+				IC_Val2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);  // read second value
+
+				if (IC_Val2 > IC_Val1)
+				{
+					Difference = IC_Val2-IC_Val1;
+				}
+
+				else if (IC_Val1 > IC_Val2)
+				{
+					Difference = (0xffff - IC_Val1) + IC_Val2;
+				}
+
+				float mFactor = 1000000/SystemCoreClock;
+
+				usWidth = Difference*mFactor;
+				srand(usWidth);
+				
+				int random_tmp;
+				random_tmp = rand() % (10 + 1 - 0) + 0;
+				
+				while(random_number == random_tmp)
+				{
+					random_tmp = rand() % (10 + 1 - 0) + 0;
+				}
+				
+				random_number = random_tmp;
+				button_pressed = true;
+
+				__HAL_TIM_SET_COUNTER(htim, 0);  // reset the counter
+				Is_First_Captured = 0; // set it back to false
+			}
+		}
+	}
+}
 
 /* USER CODE END 4 */
 

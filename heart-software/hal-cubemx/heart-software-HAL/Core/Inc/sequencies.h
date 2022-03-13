@@ -66,6 +66,13 @@ SEQUENCIES Get_Current_Sequency(void);
 int Get_Number_of_Sequencies(void);
 
 /**
+  * @brief  Is sequency running
+  * @param  None
+  * @retval True/false sequency running
+  */
+bool Is_Sequency_Running(void);
+
+/**
   * @brief  Run current sequency
   * @param  None
   * @retval None

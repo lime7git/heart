@@ -33,6 +33,11 @@ int Get_Number_of_Sequencies(void)
 	return SEQUENCY.number_of_sequencies;
 }
 
+bool Is_Sequency_Running(void)
+{
+	return SEQUENCY.is_sequency_running;
+}
+
 void Run_Current_Sequency(void)
 {
 	if(!SEQUENCY.is_sequency_running)

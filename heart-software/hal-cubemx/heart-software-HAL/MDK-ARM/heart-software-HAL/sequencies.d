@@ -29,8 +29,8 @@ heart-software-hal\sequencies.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_h
 heart-software-hal\sequencies.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_i2c_ex.h
 heart-software-hal\sequencies.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr.h
 heart-software-hal\sequencies.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr_ex.h
-heart-software-hal\sequencies.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rtc.h
-heart-software-hal\sequencies.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rtc_ex.h
+heart-software-hal\sequencies.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_tim.h
+heart-software-hal\sequencies.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_tim_ex.h
 heart-software-hal\sequencies.o: ..\Drivers\TCA6416A\tca6416a.h
 heart-software-hal\sequencies.o: ../Core/Inc/i2c.h
 heart-software-hal\sequencies.o: D:\Programy\ARM-Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
