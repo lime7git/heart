@@ -64,6 +64,7 @@ void Error_Handler(void);
 #define LIS3DH_INT2_GPIO_Port GPIOA
 #define TOUCH_BUTTON_Pin GPIO_PIN_2
 #define TOUCH_BUTTON_GPIO_Port GPIOA
+#define TOUCH_BUTTON_EXTI_IRQn EXTI2_3_IRQn
 #define TCA6416A_RESET_Pin GPIO_PIN_6
 #define TCA6416A_RESET_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */

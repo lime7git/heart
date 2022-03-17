@@ -20,7 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
-#include "tim.h"
+#include "rtc.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -35,7 +35,17 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+typedef enum HEART_STATE{
+	NONE,
+	FAULT,
+	INIT,
+	INIT_WITH_RTC,
+	INIT_WITHOUT_RTC,
+	IDLE,
+	SEQUENCY_RUNNING,
+	SLEEP,
+	
+} sHEART_STATE;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -51,8 +61,16 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-	bool button_pressed = false;
+	bool button_is_pressed = false;
+	bool button_was_pressed = false;
+	uint32_t button_pressed_time = 0;
+
 	int random_number = 0;
+
+	sHEART_STATE STATE;
+	
+	RTC_TimeTypeDef rtc_time;
+	RTC_DateTypeDef rtc_date;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -73,7 +91,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	STATE = INIT;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -95,20 +113,99 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_TIM2_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-		
-	SystemCoreClockUpdate();
+	STATE = INIT;
 	
-	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_3);
+	SystemCoreClockUpdate();
 	
 	TCA6416A_Initialization();
 	TCA6416A_Disable_All_LEDs();
-	
+			
 	Sequency_Initialization();
-	
+			
 	Set_Sequency(SEQUENCY_INIT);
-	Run_Current_Sequency();
+	Run_Current_Sequency();	
+	
+	STATE = INIT_WITHOUT_RTC;
+		
+	if(button_was_pressed == true)
+	{
+		button_was_pressed = false;
+		
+		if(button_pressed_time > 1500) 
+		{
+			STATE = INIT_WITH_RTC;
+			
+			HAL_RTC_GetTime(&hrtc, &rtc_time, RTC_FORMAT_BIN);
+			HAL_RTC_GetDate(&hrtc, &rtc_date, RTC_FORMAT_BIN);
+			
+			uint8_t tmp_value = 1;
+			uint8_t value_counter = 0;
+			
+			
+			TCA6416A_Disable_All_LEDs();
+			TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 254);
+			
+			while(STATE == INIT_WITH_RTC)
+			{
+				if(button_was_pressed == true)
+				{
+					button_was_pressed = false;
+					
+					if(button_pressed_time < 500) 
+					{
+						tmp_value++;
+						
+						if(value_counter == 0 && tmp_value == 32) tmp_value = 1;
+						else if(value_counter == 1 && tmp_value == 13) tmp_value = 1;
+						else if(value_counter == 2 && tmp_value == 100) tmp_value = 1;
+						else if(value_counter == 3 && tmp_value == 8) tmp_value = 1;
+						else if(value_counter == 4 && tmp_value == 24) tmp_value = 0;
+						else if(value_counter == 5 && tmp_value == 61) tmp_value = 0;
+						
+						
+						TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 255 - tmp_value);
+					}
+					else if(button_pressed_time > 2000) 
+					{
+						if(value_counter == 0){	rtc_date.Date = tmp_value; tmp_value = 1; }
+						else if(value_counter == 1){	rtc_date.Month = tmp_value; tmp_value = 1; }
+						else if(value_counter == 2){	rtc_date.Year = tmp_value; tmp_value = 1; }
+						else if(value_counter == 3){	rtc_date.WeekDay = tmp_value; tmp_value = 0; }
+						else if(value_counter == 4){	rtc_time.Hours = tmp_value; tmp_value = 0; }
+						else if(value_counter == 5)	
+						{
+							rtc_time.Minutes = tmp_value;
+							
+							rtc_time.Seconds = 0;
+							rtc_time.SubSeconds = 0;
+							HAL_RTC_SetTime(&hrtc, &rtc_time, RTC_FORMAT_BIN);
+							HAL_RTC_SetDate(&hrtc, &rtc_date, RTC_FORMAT_BIN);
+							STATE = IDLE;
+							TCA6416A_Enable_All_LEDs();
+							HAL_Delay(500);
+							TCA6416A_Disable_All_LEDs();
+							break;
+						}
+						
+						TCA6416A_Enable_All_LEDs();
+						HAL_Delay(500);
+						TCA6416A_Disable_All_LEDs();
+						TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 255 - tmp_value);
+						
+						
+						value_counter++;
+					}
+				}
+			}
+			
+		}
+	}
+	
+
+
+
 
   /* USER CODE END 2 */
 
@@ -120,9 +217,18 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		
-		if(button_pressed == true)
+		HAL_RTC_GetTime(&hrtc, &rtc_time, RTC_FORMAT_BIN);
+		HAL_RTC_GetDate(&hrtc, &rtc_date, RTC_FORMAT_BIN);
+		
+		if(rtc_time.Minutes == 1 && rtc_time.Seconds == 7 && rtc_date.Date == 13)
 		{
-				button_pressed = false;
+			Set_Sequency(SEQUENCY_5);
+			Run_Current_Sequency();
+		}
+		
+		if(button_was_pressed == true)
+		{
+				button_was_pressed = false;
 				Set_Sequency((SEQUENCIES)random_number);
 				Run_Current_Sequency();
 		}
@@ -148,7 +254,8 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
   RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_2;
@@ -170,8 +277,9 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_RTC;
   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
@@ -180,60 +288,36 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-uint32_t IC_Val1 = 0;
-uint32_t IC_Val2 = 0;
-uint32_t Difference = 0;
-int Is_First_Captured = 0;
-uint32_t usWidth = 0;
-
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
-{
-	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)  // if the interrupt source is channel1
-	{
-		
-		if(!Is_Sequency_Running())
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){ //interrupt handler
+    
+	if(GPIO_Pin == GPIO_PIN_2)
+	{ //check interrupt for specific pin                 
+    if(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2))
 		{
-			if (Is_First_Captured==0) // if the first value is not captured
-			{
-				IC_Val1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3); // read the first value
-				Is_First_Captured = 1;  // set the first captured as true
-			}
-
-			else   // if the first is already captured
-			{
-				IC_Val2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);  // read second value
-
-				if (IC_Val2 > IC_Val1)
-				{
-					Difference = IC_Val2-IC_Val1;
-				}
-
-				else if (IC_Val1 > IC_Val2)
-				{
-					Difference = (0xffff - IC_Val1) + IC_Val2;
-				}
-
-				float mFactor = 1000000/SystemCoreClock;
-
-				usWidth = Difference*mFactor;
-				srand(usWidth);
+			button_is_pressed = true;
+      button_pressed_time = HAL_GetTick();
+    }
+		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2))
+		{ 
+      button_pressed_time = HAL_GetTick() - button_pressed_time;
+			button_is_pressed = false;
+			
+			srand(button_pressed_time);
 				
-				int random_tmp;
+			int random_tmp;
+			random_tmp = rand() % (10 + 1 - 0) + 0;
+				
+			while(random_number == random_tmp)
+			{
 				random_tmp = rand() % (10 + 1 - 0) + 0;
-				
-				while(random_number == random_tmp)
-				{
-					random_tmp = rand() % (10 + 1 - 0) + 0;
-				}
+			}
 				
 				random_number = random_tmp;
-				button_pressed = true;
-
-				__HAL_TIM_SET_COUNTER(htim, 0);  // reset the counter
-				Is_First_Captured = 0; // set it back to false
-			}
-		}
-	}
+				
+			button_was_pressed = true;
+    }
+  }
+	
 }
 
 /* USER CODE END 4 */

@@ -29,6 +29,6 @@ heart-software-hal\tca6416a.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal
 heart-software-hal\tca6416a.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_i2c_ex.h
 heart-software-hal\tca6416a.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr.h
 heart-software-hal\tca6416a.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr_ex.h
-heart-software-hal\tca6416a.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_tim.h
-heart-software-hal\tca6416a.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_tim_ex.h
+heart-software-hal\tca6416a.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rtc.h
+heart-software-hal\tca6416a.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rtc_ex.h
 heart-software-hal\tca6416a.o: ../Core/Inc/i2c.h
