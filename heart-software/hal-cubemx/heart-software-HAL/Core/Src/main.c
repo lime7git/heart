@@ -79,6 +79,16 @@ static int16_t data_raw_temperature;
 static float acceleration_mg[3];
 static float temperature_degC;
 static uint8_t whoamI;
+
+uint8_t count = 0;
+float meanX = 0.0f;
+float meanY = 0.0f;
+float meanZ = 0.0f;
+float total_accelerometer;
+
+float roll_threshold = 1500;
+uint8_t shake_detected = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -145,7 +155,7 @@ int main(void)
 	{
 		button_was_pressed = false;
 		
-		if(button_pressed_time > 1500) 
+		if(button_pressed_time > 1250) 
 		{
 			STATE = INIT_WITH_RTC;
 			
@@ -219,6 +229,8 @@ int main(void)
 	// ACC INIT
 	
 	stmdev_ctx_t dev_ctx;
+	lis3dh_ctrl_reg3_t ctrl_reg3;
+  lis3dh_click_cfg_t click_cfg;
   dev_ctx.write_reg = platform_write;
   dev_ctx.read_reg = platform_read;
   dev_ctx.handle = &hi2c1;
@@ -241,6 +253,33 @@ int main(void)
   lis3dh_aux_adc_set(&dev_ctx, LIS3DH_AUX_ON_TEMPERATURE);
   /* Set device in continuous mode with 12 bit resol. */
   lis3dh_operating_mode_set(&dev_ctx, LIS3DH_HR_12bit);
+	
+	/* Set click threshold to 12h -> 0.281 g
+   * 1 LSB = full scale/128
+   *
+   * Set TIME_LIMIT to 20h -> 80 ms
+   * Set TIME_LATENCY to 20h -> 80 ms
+   * Set TIME_WINDOW to 30h -> 120 ms
+   * 1 LSB = 1/ODR */
+	lis3dh_tap_threshold_set(&dev_ctx, 0x60);
+  lis3dh_shock_dur_set(&dev_ctx, 0x20);
+  lis3dh_quiet_dur_set(&dev_ctx, 0x20);
+  lis3dh_double_tap_timeout_set(&dev_ctx, 0x60);
+  /* Enable Click interrupt on INT pin 1 */
+  lis3dh_pin_int1_config_get(&dev_ctx, &ctrl_reg3);
+  ctrl_reg3.i1_click = PROPERTY_ENABLE;
+  lis3dh_pin_int1_config_set(&dev_ctx, &ctrl_reg3);
+  lis3dh_int1_gen_duration_set(&dev_ctx, 0);
+  /* Enable double click on all axis */
+  lis3dh_tap_conf_get(&dev_ctx, &click_cfg);
+  click_cfg.xd = PROPERTY_ENABLE;
+  click_cfg.yd = PROPERTY_ENABLE;
+  click_cfg.zd = PROPERTY_ENABLE;
+  lis3dh_tap_conf_set(&dev_ctx, &click_cfg);
+	  /* Set Output Data Rate.
+   * The recommended accelerometer ODR for single and
+   * double-click recognition is 400 Hz or higher. */
+  lis3dh_data_rate_set(&dev_ctx, LIS3DH_ODR_400Hz);
 
   /* USER CODE END 2 */
 
@@ -257,15 +296,15 @@ int main(void)
 		
 		if(rtc_time.Minutes == 1 && rtc_time.Seconds == 7 && rtc_date.Date == 13)
 		{
-			Set_Sequency(SEQUENCY_5);
-			Run_Current_Sequency();
+		//	Set_Sequency(SEQUENCY_5);
+		//	Run_Current_Sequency();
 		}
 		
 		if(button_was_pressed == true)
 		{
 				button_was_pressed = false;
-				Set_Sequency((SEQUENCIES)random_number);
-				Run_Current_Sequency();
+				//Set_Sequency((SEQUENCIES)random_number);
+				//Run_Current_Sequency();
 		}
 		
 		
@@ -293,6 +332,56 @@ int main(void)
       lis3dh_temperature_raw_get(&dev_ctx, &data_raw_temperature);
       temperature_degC =
         lis3dh_from_lsb_hr_to_celsius(data_raw_temperature);
+    }
+		
+		if(count >= 50)
+		{
+			meanX /= count;
+			meanY /= count;
+			meanZ /= count;
+			
+			total_accelerometer = sqrt((meanX * meanX) + (meanY * meanY) + (meanZ * meanZ));
+			
+			if(total_accelerometer > roll_threshold) 
+			{
+				shake_detected = 1;
+				
+				srand(total_accelerometer);
+				random_number = rand() % (10 + 1 - 0) + 0;
+				
+			//	Set_Sequency((SEQUENCIES)random_number);
+			//	if(button_is_pressed) Run_Current_Sequency();
+			}
+			else 
+			{
+				shake_detected = 0;
+			}
+			
+			count = 0;		
+		}
+		else
+		{
+			meanX += acceleration_mg[0];
+			meanY += acceleration_mg[1];
+			meanZ += acceleration_mg[2];
+			
+			count++;
+		}
+		
+		lis3dh_click_src_t src;
+    /* Check double tap event */
+    lis3dh_tap_source_get(&dev_ctx, &src);
+
+    if (src.dclick) {
+			
+			if(acceleration_mg[2] > 900) 
+			{
+				srand(total_accelerometer);
+				random_number = rand() % (10 + 1 - 0) + 0;
+				
+				Set_Sequency((SEQUENCIES)random_number);
+				Run_Current_Sequency();
+			}
     }
 		
   }
