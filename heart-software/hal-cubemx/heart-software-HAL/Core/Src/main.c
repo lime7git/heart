@@ -26,11 +26,12 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "tca6416a.h"
-#include "lis3dh.h"
+#include "lis3dh_reg.h"
 #include "sequencies.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -71,12 +72,23 @@ typedef enum HEART_STATE{
 	
 	RTC_TimeTypeDef rtc_time;
 	RTC_DateTypeDef rtc_date;
+	
+	
+static int16_t data_raw_acceleration[3];
+static int16_t data_raw_temperature;
+static float acceleration_mg[3];
+static float temperature_degC;
+static uint8_t whoamI;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
+                              uint16_t len);
+static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
+                             uint16_t len);
+static void platform_delay(uint32_t ms);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -204,8 +216,31 @@ int main(void)
 	}
 	
 
+	// ACC INIT
+	
+	stmdev_ctx_t dev_ctx;
+  dev_ctx.write_reg = platform_write;
+  dev_ctx.read_reg = platform_read;
+  dev_ctx.handle = &hi2c1;
 
+	lis3dh_device_id_get(&dev_ctx, &whoamI);
 
+  if (whoamI != LIS3DH_ID) {
+    while (1) {
+      /* manage here device not found */
+    }
+  }
+	
+	 /* Enable Block Data Update. */
+  lis3dh_block_data_update_set(&dev_ctx, PROPERTY_ENABLE);
+  /* Set Output Data Rate to 1Hz. */
+  lis3dh_data_rate_set(&dev_ctx, LIS3DH_ODR_1Hz);
+  /* Set full scale to 2g. */
+  lis3dh_full_scale_set(&dev_ctx, LIS3DH_2g);
+  /* Enable temperature sensor. */
+  lis3dh_aux_adc_set(&dev_ctx, LIS3DH_AUX_ON_TEMPERATURE);
+  /* Set device in continuous mode with 12 bit resol. */
+  lis3dh_operating_mode_set(&dev_ctx, LIS3DH_HR_12bit);
 
   /* USER CODE END 2 */
 
@@ -233,6 +268,32 @@ int main(void)
 				Run_Current_Sequency();
 		}
 		
+		
+		lis3dh_reg_t reg;
+    /* Read output only if new value available */
+    lis3dh_xl_data_ready_get(&dev_ctx, &reg.byte);
+
+    if (reg.byte) {
+      /* Read accelerometer data */
+      memset(data_raw_acceleration, 0x00, 3 * sizeof(int16_t));
+      lis3dh_acceleration_raw_get(&dev_ctx, data_raw_acceleration);
+      acceleration_mg[0] =
+        lis3dh_from_fs2_hr_to_mg(data_raw_acceleration[0]);
+      acceleration_mg[1] =
+        lis3dh_from_fs2_hr_to_mg(data_raw_acceleration[1]);
+      acceleration_mg[2] =
+        lis3dh_from_fs2_hr_to_mg(data_raw_acceleration[2]);
+    }
+
+    lis3dh_temp_data_ready_get(&dev_ctx, &reg.byte);
+
+    if (reg.byte) {
+      /* Read temperature data */
+      memset(&data_raw_temperature, 0x00, sizeof(int16_t));
+      lis3dh_temperature_raw_get(&dev_ctx, &data_raw_temperature);
+      temperature_degC =
+        lis3dh_from_lsb_hr_to_celsius(data_raw_temperature);
+    }
 		
   }
   /* USER CODE END 3 */
@@ -318,6 +379,26 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){ //interrupt handler
     }
   }
 	
+}
+
+static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp, uint16_t len)
+{
+	reg |= 0x80;
+  HAL_I2C_Mem_Write(handle, LIS3DH_I2C_ADD_L, reg, I2C_MEMADD_SIZE_8BIT, (uint8_t*) bufp, len, 1000);
+	
+	return 0;
+}
+static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len)
+{
+	reg |= 0x80;
+  HAL_I2C_Mem_Read(handle, LIS3DH_I2C_ADD_L, reg,
+                   I2C_MEMADD_SIZE_8BIT, bufp, len, 1000);
+	
+	return 0;
+}
+static void platform_delay(uint32_t ms)
+{
+	HAL_Delay(ms);
 }
 
 /* USER CODE END 4 */

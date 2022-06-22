@@ -697,14 +697,14 @@
           <GroupName>Drivers/LIS3DH</GroupName>
           <Files>
             <File>
-              <FileName>lis3dh.c</FileName>
+              <FileName>lis3dh_reg.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Drivers\LIS3DH\lis3dh.c</FilePath>
+              <FilePath>..\Drivers\LIS3DH\lis3dh_reg.c</FilePath>
             </File>
             <File>
-              <FileName>lis3dh.h</FileName>
+              <FileName>lis3dh_reg.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Drivers\LIS3DH\lis3dh.h</FilePath>
+              <FilePath>..\Drivers\LIS3DH\lis3dh_reg.h</FilePath>
             </File>
           </Files>
         </Group>
