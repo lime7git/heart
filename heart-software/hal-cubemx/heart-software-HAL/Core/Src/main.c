@@ -261,10 +261,10 @@ int main(void)
    * Set TIME_LATENCY to 20h -> 80 ms
    * Set TIME_WINDOW to 30h -> 120 ms
    * 1 LSB = 1/ODR */
-	lis3dh_tap_threshold_set(&dev_ctx, 0x60);
+	lis3dh_tap_threshold_set(&dev_ctx, 0x55);
   lis3dh_shock_dur_set(&dev_ctx, 0x20);
   lis3dh_quiet_dur_set(&dev_ctx, 0x20);
-  lis3dh_double_tap_timeout_set(&dev_ctx, 0x60);
+  lis3dh_double_tap_timeout_set(&dev_ctx, 0x25);
   /* Enable Click interrupt on INT pin 1 */
   lis3dh_pin_int1_config_get(&dev_ctx, &ctrl_reg3);
   ctrl_reg3.i1_click = PROPERTY_ENABLE;
@@ -272,8 +272,8 @@ int main(void)
   lis3dh_int1_gen_duration_set(&dev_ctx, 0);
   /* Enable double click on all axis */
   lis3dh_tap_conf_get(&dev_ctx, &click_cfg);
-  click_cfg.xd = PROPERTY_ENABLE;
-  click_cfg.yd = PROPERTY_ENABLE;
+  click_cfg.xd = PROPERTY_DISABLE;
+  click_cfg.yd = PROPERTY_DISABLE;
   click_cfg.zd = PROPERTY_ENABLE;
   lis3dh_tap_conf_set(&dev_ctx, &click_cfg);
 	  /* Set Output Data Rate.

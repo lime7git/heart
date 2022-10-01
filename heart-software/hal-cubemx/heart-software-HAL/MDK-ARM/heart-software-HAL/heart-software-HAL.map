@@ -1589,21 +1589,21 @@ Image Symbol Table
     i.lis3dh_write_reg                       0x08002b94   Section        0  lis3dh_reg.o(i.lis3dh_write_reg)
     i.lis3dh_xl_data_ready_get               0x08002ba2   Section        0  lis3dh_reg.o(i.lis3dh_xl_data_ready_get)
     i.main                                   0x08002bbc   Section        0  main.o(i.main)
-    i.platform_read                          0x08002f84   Section        0  main.o(i.platform_read)
-    platform_read                            0x08002f85   Thumb Code    28  main.o(i.platform_read)
-    i.platform_write                         0x08002fa0   Section        0  main.o(i.platform_write)
-    platform_write                           0x08002fa1   Thumb Code    28  main.o(i.platform_write)
-    i.sqrt                                   0x08002fbc   Section        0  sqrt.o(i.sqrt)
-    x$fpl$fadd                               0x08003004   Section      140  faddsub.o(x$fpl$fadd)
-    _fadd1                                   0x08003011   Thumb Code     0  faddsub.o(x$fpl$fadd)
-    x$fpl$fmul                               0x08003090   Section      176  fmul.o(x$fpl$fmul)
-    x$fpl$frleqf                             0x08003140   Section       88  frlef.o(x$fpl$frleqf)
-    x$fpl$fsub                               0x08003198   Section      208  faddsub.o(x$fpl$fsub)
-    _fsub1                                   0x080031a5   Thumb Code     0  faddsub.o(x$fpl$fsub)
-    .constdata                               0x08003268   Section       25  system_stm32l0xx.o(.constdata)
-    x$fpl$usenofp                            0x08003268   Section        0  usenofp.o(x$fpl$usenofp)
-    .constdata                               0x08003281   Section       64  fdiv.o(.constdata)
-    fdiv_tab                                 0x08003281   Data          64  fdiv.o(.constdata)
+    i.platform_read                          0x08002f88   Section        0  main.o(i.platform_read)
+    platform_read                            0x08002f89   Thumb Code    28  main.o(i.platform_read)
+    i.platform_write                         0x08002fa4   Section        0  main.o(i.platform_write)
+    platform_write                           0x08002fa5   Thumb Code    28  main.o(i.platform_write)
+    i.sqrt                                   0x08002fc0   Section        0  sqrt.o(i.sqrt)
+    x$fpl$fadd                               0x08003008   Section      140  faddsub.o(x$fpl$fadd)
+    _fadd1                                   0x08003015   Thumb Code     0  faddsub.o(x$fpl$fadd)
+    x$fpl$fmul                               0x08003094   Section      176  fmul.o(x$fpl$fmul)
+    x$fpl$frleqf                             0x08003144   Section       88  frlef.o(x$fpl$frleqf)
+    x$fpl$fsub                               0x0800319c   Section      208  faddsub.o(x$fpl$fsub)
+    _fsub1                                   0x080031a9   Thumb Code     0  faddsub.o(x$fpl$fsub)
+    .constdata                               0x0800326c   Section       25  system_stm32l0xx.o(.constdata)
+    x$fpl$usenofp                            0x0800326c   Section        0  usenofp.o(x$fpl$usenofp)
+    .constdata                               0x08003285   Section       64  fdiv.o(.constdata)
+    fdiv_tab                                 0x08003285   Data          64  fdiv.o(.constdata)
     .data                                    0x20000000   Section        4  sequencies.o(.data)
     .data                                    0x20000004   Section       50  main.o(.data)
     whoamI                                   0x20000009   Data           1  main.o(.data)
@@ -1867,21 +1867,21 @@ Image Symbol Table
     lis3dh_temperature_raw_get               0x08002b75   Thumb Code    32  lis3dh_reg.o(i.lis3dh_temperature_raw_get)
     lis3dh_write_reg                         0x08002b95   Thumb Code    14  lis3dh_reg.o(i.lis3dh_write_reg)
     lis3dh_xl_data_ready_get                 0x08002ba3   Thumb Code    26  lis3dh_reg.o(i.lis3dh_xl_data_ready_get)
-    main                                     0x08002bbd   Thumb Code   936  main.o(i.main)
-    sqrt                                     0x08002fbd   Thumb Code    66  sqrt.o(i.sqrt)
-    __aeabi_fadd                             0x08003005   Thumb Code     0  faddsub.o(x$fpl$fadd)
-    _fadd                                    0x08003005   Thumb Code   134  faddsub.o(x$fpl$fadd)
-    __aeabi_fmul                             0x08003091   Thumb Code     0  fmul.o(x$fpl$fmul)
-    _fmul                                    0x08003091   Thumb Code   172  fmul.o(x$fpl$fmul)
-    __aeabi_cfrcmple                         0x08003141   Thumb Code     0  frlef.o(x$fpl$frleqf)
-    _frcmple                                 0x08003141   Thumb Code    84  frlef.o(x$fpl$frleqf)
-    __aeabi_fsub                             0x08003199   Thumb Code     0  faddsub.o(x$fpl$fsub)
-    _fsub                                    0x08003199   Thumb Code   204  faddsub.o(x$fpl$fsub)
-    AHBPrescTable                            0x08003268   Data          16  system_stm32l0xx.o(.constdata)
-    __I$use$fp                               0x08003268   Number         0  usenofp.o(x$fpl$usenofp)
-    PLLMulTable                              0x08003278   Data           9  system_stm32l0xx.o(.constdata)
-    Region$$Table$$Base                      0x080032c4   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x080032e4   Number         0  anon$$obj.o(Region$$Table)
+    main                                     0x08002bbd   Thumb Code   940  main.o(i.main)
+    sqrt                                     0x08002fc1   Thumb Code    66  sqrt.o(i.sqrt)
+    __aeabi_fadd                             0x08003009   Thumb Code     0  faddsub.o(x$fpl$fadd)
+    _fadd                                    0x08003009   Thumb Code   134  faddsub.o(x$fpl$fadd)
+    __aeabi_fmul                             0x08003095   Thumb Code     0  fmul.o(x$fpl$fmul)
+    _fmul                                    0x08003095   Thumb Code   172  fmul.o(x$fpl$fmul)
+    __aeabi_cfrcmple                         0x08003145   Thumb Code     0  frlef.o(x$fpl$frleqf)
+    _frcmple                                 0x08003145   Thumb Code    84  frlef.o(x$fpl$frleqf)
+    __aeabi_fsub                             0x0800319d   Thumb Code     0  faddsub.o(x$fpl$fsub)
+    _fsub                                    0x0800319d   Thumb Code   204  faddsub.o(x$fpl$fsub)
+    AHBPrescTable                            0x0800326c   Data          16  system_stm32l0xx.o(.constdata)
+    __I$use$fp                               0x0800326c   Number         0  usenofp.o(x$fpl$usenofp)
+    PLLMulTable                              0x0800327c   Data           9  system_stm32l0xx.o(.constdata)
+    Region$$Table$$Base                      0x080032c8   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x080032e8   Number         0  anon$$obj.o(Region$$Table)
     SEQUENCY                                 0x20000000   Data           4  sequencies.o(.data)
     button_is_pressed                        0x20000004   Data           1  main.o(.data)
     button_was_pressed                       0x20000005   Data           1  main.o(.data)
@@ -1915,9 +1915,9 @@ Memory Map of the image
 
   Image Entry point : 0x080000c1
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x0000332c, Max: 0x00008000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00003330, Max: 0x00008000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x000032e4, Max: 0x00008000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x000032e8, Max: 0x00008000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -2099,36 +2099,36 @@ Memory Map of the image
     0x08002b74   0x08002b74   0x00000020   Code   RO         2588    i.lis3dh_temperature_raw_get  lis3dh_reg.o
     0x08002b94   0x08002b94   0x0000000e   Code   RO         2589    i.lis3dh_write_reg  lis3dh_reg.o
     0x08002ba2   0x08002ba2   0x0000001a   Code   RO         2591    i.lis3dh_xl_data_ready_get  lis3dh_reg.o
-    0x08002bbc   0x08002bbc   0x000003c8   Code   RO          185    i.main              main.o
-    0x08002f84   0x08002f84   0x0000001c   Code   RO          186    i.platform_read     main.o
-    0x08002fa0   0x08002fa0   0x0000001c   Code   RO          187    i.platform_write    main.o
-    0x08002fbc   0x08002fbc   0x00000048   Code   RO         3259    i.sqrt              m_ps.l(sqrt.o)
-    0x08003004   0x08003004   0x0000008c   Code   RO         3239    x$fpl$fadd          fz_ps.l(faddsub.o)
-    0x08003090   0x08003090   0x000000b0   Code   RO         3252    x$fpl$fmul          fz_ps.l(fmul.o)
-    0x08003140   0x08003140   0x00000058   Code   RO         3254    x$fpl$frleqf        fz_ps.l(frlef.o)
-    0x08003198   0x08003198   0x000000d0   Code   RO         3241    x$fpl$fsub          fz_ps.l(faddsub.o)
-    0x08003268   0x08003268   0x00000000   Code   RO         3328    x$fpl$usenofp       fz_ps.l(usenofp.o)
-    0x08003268   0x08003268   0x00000019   Data   RO         2449    .constdata          system_stm32l0xx.o
-    0x08003281   0x08003281   0x00000040   Data   RO         3246    .constdata          fz_ps.l(fdiv.o)
-    0x080032c1   0x080032c1   0x00000003   PAD
-    0x080032c4   0x080032c4   0x00000020   Data   RO         3461    Region$$Table       anon$$obj.o
+    0x08002bbc   0x08002bbc   0x000003cc   Code   RO          185    i.main              main.o
+    0x08002f88   0x08002f88   0x0000001c   Code   RO          186    i.platform_read     main.o
+    0x08002fa4   0x08002fa4   0x0000001c   Code   RO          187    i.platform_write    main.o
+    0x08002fc0   0x08002fc0   0x00000048   Code   RO         3259    i.sqrt              m_ps.l(sqrt.o)
+    0x08003008   0x08003008   0x0000008c   Code   RO         3239    x$fpl$fadd          fz_ps.l(faddsub.o)
+    0x08003094   0x08003094   0x000000b0   Code   RO         3252    x$fpl$fmul          fz_ps.l(fmul.o)
+    0x08003144   0x08003144   0x00000058   Code   RO         3254    x$fpl$frleqf        fz_ps.l(frlef.o)
+    0x0800319c   0x0800319c   0x000000d0   Code   RO         3241    x$fpl$fsub          fz_ps.l(faddsub.o)
+    0x0800326c   0x0800326c   0x00000000   Code   RO         3328    x$fpl$usenofp       fz_ps.l(usenofp.o)
+    0x0800326c   0x0800326c   0x00000019   Data   RO         2449    .constdata          system_stm32l0xx.o
+    0x08003285   0x08003285   0x00000040   Data   RO         3246    .constdata          fz_ps.l(fdiv.o)
+    0x080032c5   0x080032c5   0x00000003   PAD
+    0x080032c8   0x080032c8   0x00000020   Data   RO         3461    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x080032e4, Size: 0x00000820, Max: 0x00002000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x080032e8, Size: 0x00000820, Max: 0x00002000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x080032e4   0x00000004   Data   RW           18    .data               sequencies.o
-    0x20000004   0x080032e8   0x00000032   Data   RW          189    .data               main.o
-    0x20000036   0x0800331a   0x00000002   PAD
-    0x20000038   0x0800331c   0x0000000c   Data   RW          959    .data               stm32l0xx_hal.o
-    0x20000044   0x08003328   0x00000004   Data   RW         2451    .data               system_stm32l0xx.o
+    0x20000000   0x080032e8   0x00000004   Data   RW           18    .data               sequencies.o
+    0x20000004   0x080032ec   0x00000032   Data   RW          189    .data               main.o
+    0x20000036   0x0800331e   0x00000002   PAD
+    0x20000038   0x08003320   0x0000000c   Data   RW          959    .data               stm32l0xx_hal.o
+    0x20000044   0x0800332c   0x00000004   Data   RW         2451    .data               system_stm32l0xx.o
     0x20000048        -       0x00000020   Zero   RW          188    .bss                main.o
     0x20000068        -       0x0000004c   Zero   RW          274    .bss                i2c.o
     0x200000b4        -       0x00000024   Zero   RW          312    .bss                rtc.o
     0x200000d8        -       0x000000e4   Zero   RW         3222    .bss                c_p.l(rand.o)
     0x200001bc        -       0x00000060   Zero   RW         3362    .bss                c_p.l(libspace.o)
-    0x2000021c   0x0800332c   0x00000004   PAD
+    0x2000021c   0x08003330   0x00000004   PAD
     0x20000220        -       0x00000200   Zero   RW            2    HEAP                startup_stm32l031xx.o
     0x20000420        -       0x00000400   Zero   RW            1    STACK               startup_stm32l031xx.o
 
@@ -2143,7 +2143,7 @@ Image component sizes
        212         12          0          0          0        975   gpio.o
        172         18          0          0         76       1641   i2c.o
        900          6          0          0          0      16125   lis3dh_reg.o
-      1260         42          0         50         32      18119   main.o
+      1264         42          0         50         32      18119   main.o
        156         18          0          0         36       1563   rtc.o
       1226         34          0          4          0     282348   sequencies.o
         56         26        192          0       1536        652   startup_stm32l031xx.o
@@ -2161,7 +2161,7 @@ Image component sizes
        116          6          0          0          0       3402   tca6416a.o
 
     ----------------------------------------------------------------------
-      9650        408        249         72       1680     379013   Object Totals
+      9654        408        249         72       1680     379013   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         14          0          0          2          0          0   (incl. Padding)
 
@@ -2234,15 +2234,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     12712        506        316         72       2008     376177   Grand Totals
-     12712        506        316         72       2008     376177   ELF Image Totals
-     12712        506        316         72          0          0   ROM Totals
+     12716        506        316         72       2008     376177   Grand Totals
+     12716        506        316         72       2008     376177   ELF Image Totals
+     12716        506        316         72          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                13028 (  12.72kB)
+    Total RO  Size (Code + RO Data)                13032 (  12.73kB)
     Total RW  Size (RW Data + ZI Data)              2080 (   2.03kB)
-    Total ROM Size (Code + RO Data + RW Data)      13100 (  12.79kB)
+    Total ROM Size (Code + RO Data + RW Data)      13104 (  12.80kB)
 
 ==============================================================================
 
