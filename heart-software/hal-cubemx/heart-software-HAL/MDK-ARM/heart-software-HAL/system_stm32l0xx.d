@@ -27,5 +27,3 @@ heart-software-hal\system_stm32l0xx.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32
 heart-software-hal\system_stm32l0xx.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_i2c_ex.h
 heart-software-hal\system_stm32l0xx.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr.h
 heart-software-hal\system_stm32l0xx.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr_ex.h
-heart-software-hal\system_stm32l0xx.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rtc.h
-heart-software-hal\system_stm32l0xx.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rtc_ex.h

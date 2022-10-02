@@ -245,46 +245,6 @@ void Run_Current_Sequency(void)
 			break;
 			}
 			
-			case SEQUENCY_10 : {
-				
-				TCA6416A_Enable_All_LEDs();
-				
-				HAL_Delay(1000);
-				uint8_t leds_left = 15;
-				uint8_t leds_right = 240;
-				for(int i = 0; i < 3; i++)
-				{
-					TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_left);
-					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_right);
-					HAL_Delay(500);
-					TCA6416A_Enable_All_LEDs();
-					HAL_Delay(500);
-				}
-				
-				leds_left = 254;
-				leds_right = 79;
-		
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_left);
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_right);
-				HAL_Delay(2000);
-				
-				leds_left = 255;
-				leds_right = 111;
-		
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_left);
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_right);
-				HAL_Delay(2000);
-				
-				leds_left = 254;
-				leds_right = 239;
-		
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, leds_left);
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, leds_right);
-				HAL_Delay(2000);
-				
-			break;
-			}
-			
 			case SEQUENCY_LAST : {
 				
 				

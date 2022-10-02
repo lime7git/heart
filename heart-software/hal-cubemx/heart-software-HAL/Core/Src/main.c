@@ -20,7 +20,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
-#include "rtc.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -70,14 +69,8 @@ typedef enum HEART_STATE{
 
 	sHEART_STATE STATE;
 	
-	RTC_TimeTypeDef rtc_time;
-	RTC_DateTypeDef rtc_date;
-	
-	
 static int16_t data_raw_acceleration[3];
-static int16_t data_raw_temperature;
 static float acceleration_mg[3];
-static float temperature_degC;
 static uint8_t whoamI;
 
 uint8_t count = 0;
@@ -98,7 +91,6 @@ static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
                               uint16_t len);
 static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
                              uint16_t len);
-static void platform_delay(uint32_t ms);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -135,7 +127,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 	STATE = INIT;
 	
@@ -155,74 +146,6 @@ int main(void)
 	{
 		button_was_pressed = false;
 		
-		if(button_pressed_time > 1250) 
-		{
-			STATE = INIT_WITH_RTC;
-			
-			HAL_RTC_GetTime(&hrtc, &rtc_time, RTC_FORMAT_BIN);
-			HAL_RTC_GetDate(&hrtc, &rtc_date, RTC_FORMAT_BIN);
-			
-			uint8_t tmp_value = 1;
-			uint8_t value_counter = 0;
-			
-			
-			TCA6416A_Disable_All_LEDs();
-			TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 254);
-			
-			while(STATE == INIT_WITH_RTC)
-			{
-				if(button_was_pressed == true)
-				{
-					button_was_pressed = false;
-					
-					if(button_pressed_time < 500) 
-					{
-						tmp_value++;
-						
-						if(value_counter == 0 && tmp_value == 32) tmp_value = 1;
-						else if(value_counter == 1 && tmp_value == 13) tmp_value = 1;
-						else if(value_counter == 2 && tmp_value == 100) tmp_value = 1;
-						else if(value_counter == 3 && tmp_value == 8) tmp_value = 1;
-						else if(value_counter == 4 && tmp_value == 24) tmp_value = 0;
-						else if(value_counter == 5 && tmp_value == 61) tmp_value = 0;
-						
-						
-						TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 255 - tmp_value);
-					}
-					else if(button_pressed_time > 2000) 
-					{
-						if(value_counter == 0){	rtc_date.Date = tmp_value; tmp_value = 1; }
-						else if(value_counter == 1){	rtc_date.Month = tmp_value; tmp_value = 1; }
-						else if(value_counter == 2){	rtc_date.Year = tmp_value; tmp_value = 1; }
-						else if(value_counter == 3){	rtc_date.WeekDay = tmp_value; tmp_value = 0; }
-						else if(value_counter == 4){	rtc_time.Hours = tmp_value; tmp_value = 0; }
-						else if(value_counter == 5)	
-						{
-							rtc_time.Minutes = tmp_value;
-							
-							rtc_time.Seconds = 0;
-							rtc_time.SubSeconds = 0;
-							HAL_RTC_SetTime(&hrtc, &rtc_time, RTC_FORMAT_BIN);
-							HAL_RTC_SetDate(&hrtc, &rtc_date, RTC_FORMAT_BIN);
-							STATE = IDLE;
-							TCA6416A_Enable_All_LEDs();
-							HAL_Delay(500);
-							TCA6416A_Disable_All_LEDs();
-							break;
-						}
-						
-						TCA6416A_Enable_All_LEDs();
-						HAL_Delay(500);
-						TCA6416A_Disable_All_LEDs();
-						TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 255 - tmp_value);
-						
-						
-						value_counter++;
-					}
-				}
-			}
-			
-		}
 	}
 	
 
@@ -291,20 +214,10 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		
-		HAL_RTC_GetTime(&hrtc, &rtc_time, RTC_FORMAT_BIN);
-		HAL_RTC_GetDate(&hrtc, &rtc_date, RTC_FORMAT_BIN);
-		
-		if(rtc_time.Minutes == 1 && rtc_time.Seconds == 7 && rtc_date.Date == 13)
-		{
-		//	Set_Sequency(SEQUENCY_5);
-		//	Run_Current_Sequency();
-		}
-		
 		if(button_was_pressed == true)
 		{
 				button_was_pressed = false;
-				//Set_Sequency((SEQUENCIES)random_number);
-				//Run_Current_Sequency();
+
 		}
 		
 		
@@ -326,14 +239,6 @@ int main(void)
 
     lis3dh_temp_data_ready_get(&dev_ctx, &reg.byte);
 
-    if (reg.byte) {
-      /* Read temperature data */
-      memset(&data_raw_temperature, 0x00, sizeof(int16_t));
-      lis3dh_temperature_raw_get(&dev_ctx, &data_raw_temperature);
-      temperature_degC =
-        lis3dh_from_lsb_hr_to_celsius(data_raw_temperature);
-    }
-		
 		if(count >= 50)
 		{
 			meanX /= count;
@@ -349,8 +254,7 @@ int main(void)
 				srand(total_accelerometer);
 				random_number = rand() % (10 + 1 - 0) + 0;
 				
-			//	Set_Sequency((SEQUENCIES)random_number);
-			//	if(button_is_pressed) Run_Current_Sequency();
+				Set_Sequency((SEQUENCIES)random_number);
 			}
 			else 
 			{
@@ -404,8 +308,7 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_MSI;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
   RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_2;
@@ -427,9 +330,8 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_RTC;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
-  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
@@ -484,10 +386,6 @@ static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t 
                    I2C_MEMADD_SIZE_8BIT, bufp, len, 1000);
 	
 	return 0;
-}
-static void platform_delay(uint32_t ms)
-{
-	HAL_Delay(ms);
 }
 
 /* USER CODE END 4 */
