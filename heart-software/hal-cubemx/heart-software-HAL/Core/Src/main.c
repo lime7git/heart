@@ -35,17 +35,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-typedef enum HEART_STATE{
-	NONE,
-	FAULT,
-	INIT,
-	INIT_WITH_RTC,
-	INIT_WITHOUT_RTC,
-	IDLE,
-	SEQUENCY_RUNNING,
-	SLEEP,
-	
-} sHEART_STATE;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -68,7 +58,7 @@ typedef enum HEART_STATE{
 	int previous_random;
 	int random_number = 0;
 
-	sHEART_STATE STATE;
+	sHEART_STATE state = POWER_UP;
 	
 static int16_t data_raw_acceleration[3];
 static float acceleration_mg[3];
@@ -87,6 +77,7 @@ uint8_t shake_detected = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 static int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp,
                               uint16_t len);
@@ -106,7 +97,7 @@ static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp,
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	STATE = INIT;
+	state = INIT;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -128,8 +119,21 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
+
+  /* Initialize interrupts */
+  MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
-	STATE = INIT;
+	PWR_PVDTypeDef PVD_Configuration;
+ 
+    __HAL_RCC_PWR_CLK_ENABLE();
+    HAL_NVIC_SetPriority(PVD_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(PVD_IRQn);
+ 
+    PVD_Configuration.PVDLevel = PWR_PVDLEVEL_2;
+    PVD_Configuration.Mode = PWR_PVD_MODE_IT_RISING;
+ 
+    HAL_PWR_ConfigPVD(&PVD_Configuration);
+		HAL_PWR_EnablePVD();
 	
 	SystemCoreClockUpdate();
 	
@@ -140,15 +144,6 @@ int main(void)
 			
 	Set_Sequency(SEQUENCY_INIT);
 	Run_Current_Sequency();	
-	
-	STATE = INIT_WITHOUT_RTC;
-		
-	if(button_was_pressed == true)
-	{
-		button_was_pressed = false;
-		
-	}
-	
 
 	// ACC INIT
 	
@@ -205,6 +200,9 @@ int main(void)
    * double-click recognition is 400 Hz or higher. */
   lis3dh_data_rate_set(&dev_ctx, LIS3DH_ODR_400Hz);
 
+
+  state = IDLE;
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -215,12 +213,30 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		
-		if(button_was_pressed == true)
+		switch(state)
+		{
+			case NONE:
+				
+			break;
+			
+			case FAULT:
+				
+			break;
+			
+			case POWER_UP:
+				
+			break;
+			
+			case INIT:
+				
+			break;
+			
+			case IDLE:
+				if(button_was_pressed == true)
 		{
 				button_was_pressed = false;
 
 		}
-		
 		
 		lis3dh_reg_t reg;
     /* Read output only if new value available */
@@ -293,10 +309,42 @@ int main(void)
 				previous_random = random_number;
 				
 				Set_Sequency((SEQUENCIES)random_number);
+				state = SEQUENCY_RUNNING;
 				Run_Current_Sequency();
+				state = IDLE;
 			}
     }
-		
+			break;
+			
+			case SEQUENCY_RUNNING:
+				
+			break;
+			
+			case SLEEP:
+				
+			break;
+			
+			case LOW_BATTERY:
+				
+			TCA6416A_Disable_All_LEDs();
+			HAL_Delay(500);
+			TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 127);
+			HAL_Delay(500);
+			TCA6416A_Disable_All_LEDs();
+			HAL_Delay(500);
+			TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 127);
+			HAL_Delay(500);
+			TCA6416A_Disable_All_LEDs();
+			
+			
+			TCA6416A_Disable_All_LEDs();
+			HAL_Delay(30000);
+			break;
+			
+			default: 
+				
+			break;
+		}
   }
   /* USER CODE END 3 */
 }
@@ -314,6 +362,7 @@ void SystemClock_Config(void)
   /** Configure the main internal regulator output voltage
   */
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
@@ -326,6 +375,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -345,6 +395,17 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief NVIC Configuration.
+  * @retval None
+  */
+static void MX_NVIC_Init(void)
+{
+  /* PVD_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(PVD_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(PVD_IRQn);
 }
 
 /* USER CODE BEGIN 4 */
@@ -430,4 +491,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-

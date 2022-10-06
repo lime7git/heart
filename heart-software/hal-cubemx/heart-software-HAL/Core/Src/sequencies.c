@@ -281,5 +281,6 @@ void Run_Current_Sequency(void)
 		Set_Sequency(SEQUENCY_NONE);
 		SEQUENCY.is_sequency_running = false;
 		TCA6416A_Disable_All_LEDs();
+		
 	}
 }

@@ -58,7 +58,7 @@
 /* External variables --------------------------------------------------------*/
 
 /* USER CODE BEGIN EV */
-
+extern sHEART_STATE state;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -142,6 +142,20 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles PVD interrupt through EXTI line 16.
+  */
+void PVD_IRQHandler(void)
+{
+  /* USER CODE BEGIN PVD_IRQn 0 */
+
+  /* USER CODE END PVD_IRQn 0 */
+  HAL_PWR_PVD_IRQHandler();
+  /* USER CODE BEGIN PVD_IRQn 1 */
+	state = LOW_BATTERY;
+  /* USER CODE END PVD_IRQn 1 */
+}
+
+/**
   * @brief This function handles EXTI line 2 and line 3 interrupts.
   */
 void EXTI2_3_IRQHandler(void)
@@ -158,4 +172,3 @@ void EXTI2_3_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
-
