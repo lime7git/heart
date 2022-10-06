@@ -65,6 +65,7 @@ typedef enum HEART_STATE{
 	bool button_was_pressed = false;
 	uint32_t button_pressed_time = 0;
 
+	int previous_random;
 	int random_number = 0;
 
 	sHEART_STATE STATE;
@@ -252,7 +253,11 @@ int main(void)
 				shake_detected = 1;
 				
 				srand(total_accelerometer);
-				random_number = rand() % (10 + 1 - 0) + 0;
+				do{
+					random_number = rand() % ((SEQUENCY_LAST - 1) - SEQUENCY_1 + 1) + SEQUENCY_1;
+				}while(random_number == previous_random);
+				
+				previous_random = random_number;
 				
 				Set_Sequency((SEQUENCIES)random_number);
 			}
@@ -281,7 +286,11 @@ int main(void)
 			if(acceleration_mg[2] > 900) 
 			{
 				srand(total_accelerometer);
-				random_number = rand() % (10 + 1 - 0) + 0;
+				do{
+					random_number = rand() % ((SEQUENCY_LAST - 1) - SEQUENCY_1 + 1) + SEQUENCY_1;
+				}while(random_number == previous_random);
+				
+				previous_random = random_number;
 				
 				Set_Sequency((SEQUENCIES)random_number);
 				Run_Current_Sequency();
