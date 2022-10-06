@@ -311,7 +311,7 @@ int main(void)
 				Set_Sequency((SEQUENCIES)random_number);
 				state = SEQUENCY_RUNNING;
 				Run_Current_Sequency();
-				state = IDLE;
+				if(state != LOW_BATTERY) state = IDLE;
 			}
     }
 			break;
