@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
+#include "rtc.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -119,6 +120,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
+  MX_RTC_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -165,13 +167,13 @@ int main(void)
 	 /* Enable Block Data Update. */
   lis3dh_block_data_update_set(&dev_ctx, PROPERTY_ENABLE);
   /* Set Output Data Rate to 1Hz. */
-  lis3dh_data_rate_set(&dev_ctx, LIS3DH_ODR_1Hz);
+  lis3dh_data_rate_set(&dev_ctx, LIS3DH_ODR_100Hz);
   /* Set full scale to 2g. */
   lis3dh_full_scale_set(&dev_ctx, LIS3DH_2g);
   /* Enable temperature sensor. */
   lis3dh_aux_adc_set(&dev_ctx, LIS3DH_AUX_ON_TEMPERATURE);
   /* Set device in continuous mode with 12 bit resol. */
-  lis3dh_operating_mode_set(&dev_ctx, LIS3DH_HR_12bit);
+  lis3dh_operating_mode_set(&dev_ctx, LIS3DH_LP_8bit);
 	
 	/* Set click threshold to 12h -> 0.281 g
    * 1 LSB = full scale/128
@@ -180,7 +182,7 @@ int main(void)
    * Set TIME_LATENCY to 20h -> 80 ms
    * Set TIME_WINDOW to 30h -> 120 ms
    * 1 LSB = 1/ODR */
-	lis3dh_tap_threshold_set(&dev_ctx, 0x55);
+	lis3dh_tap_threshold_set(&dev_ctx, 0x60);
   lis3dh_shock_dur_set(&dev_ctx, 0x20);
   lis3dh_quiet_dur_set(&dev_ctx, 0x20);
   lis3dh_double_tap_timeout_set(&dev_ctx, 0x25);
@@ -199,6 +201,7 @@ int main(void)
    * The recommended accelerometer ODR for single and
    * double-click recognition is 400 Hz or higher. */
   lis3dh_data_rate_set(&dev_ctx, LIS3DH_ODR_400Hz);
+  lis3dh_pin_sdo_sa0_mode_set(&dev_ctx, LIS3DH_PULL_UP_CONNECT);
 
 
   state = IDLE;
@@ -299,7 +302,7 @@ int main(void)
 
     if (src.dclick) {
 			
-			if(acceleration_mg[2] > 900) 
+			if(acceleration_mg[2] > 950) 
 			{
 				srand(total_accelerometer);
 				do{
@@ -327,7 +330,6 @@ int main(void)
 			case LOW_BATTERY:
 				
 			TCA6416A_Disable_All_LEDs();
-			HAL_Delay(500);
 			TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 127);
 			HAL_Delay(500);
 			TCA6416A_Disable_All_LEDs();
@@ -336,9 +338,19 @@ int main(void)
 			HAL_Delay(500);
 			TCA6416A_Disable_All_LEDs();
 			
+			lis3dh_block_data_update_set(&dev_ctx, LIS3DH_POWER_DOWN);
+			lis3dh_aux_adc_set(&dev_ctx, LIS3DH_AUX_DISABLE);
+			HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 0x61A8, RTC_WAKEUPCLOCK_RTCCLK_DIV16);
 			
-			TCA6416A_Disable_All_LEDs();
-			HAL_Delay(30000);
+			HAL_SuspendTick();
+			
+			//HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // w sleep modzie na takiej konfiguracji bylo zuzycie na poziomie 50uA
+			HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // 25uA
+			
+			HAL_ResumeTick();
+			HAL_RTCEx_DeactivateWakeUpTimer(&hrtc);
+			SystemClock_Config();
+			
 			break;
 			
 			default: 
@@ -366,7 +378,8 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
   RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_2;
@@ -389,8 +402,9 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_RTC;
   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
