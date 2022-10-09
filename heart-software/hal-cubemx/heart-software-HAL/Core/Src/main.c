@@ -56,23 +56,23 @@
 /* USER CODE BEGIN PV */
 	bool button_is_pressed = false;
 	bool button_was_pressed = false;
+	uint32_t button_pressed_time_tmp = 0;
 	uint32_t button_pressed_time = 0;
+	
 
 	int previous_random;
 	int random_number = 0;
 
 	sHEART_STATE state = POWER_UP;
-	
-	reset_cause_t reset_cause;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_NVIC_Init(void);
+
+void reset_detection(void);
 /* USER CODE BEGIN PFP */
-void reset_detection_update(void);
-reset_cause_t reset_cause_get(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -88,7 +88,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	state = POWER_UP;
-	reset_cause = reset_cause_get();
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -127,8 +127,6 @@ int main(void)
   HAL_PWR_ConfigPVD(&PVD_Configuration);
 	HAL_PWR_EnablePVD();
 	
-	//SystemCoreClockUpdate();
-	
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -153,39 +151,22 @@ int main(void)
 				
 				TCA6416A_Initialization();
 				TCA6416A_Disable_All_LEDs();
-				
 				Sequency_Initialization();
+			
 				Set_Sequency(SEQUENCY_INIT);
 				Run_Current_Sequency();
 
 				if(button_is_pressed)
 				{
-					state = INIT_TOUCH_BUTTON;
+					state = INIT_ACCELEROMETER;
 				}
-				else state = INIT_ACCELEROMETER;
+				else state = INIT_TOUCH_BUTTON;
 			
 			break;
 			
 			case INIT_ACCELEROMETER:
 				
 				accelerometer_init();
-			
-				TCA6416A_Disable_All_LEDs();
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 254);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-				HAL_Delay(500);
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 254);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-			
-				state = IDLE_MODE_ACCELEROMETER;
-			
-			break;
-			
-			case INIT_TOUCH_BUTTON:
-				
-				accelerometer_enter_low_power();
 			
 				TCA6416A_Disable_All_LEDs();
 				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 253);
@@ -199,13 +180,35 @@ int main(void)
 				button_is_pressed = false;
 				button_was_pressed = false;
 				button_pressed_time = 0;
+			
+				state = IDLE_MODE_ACCELEROMETER;
+			
+			break;
+			
+			case INIT_TOUCH_BUTTON:
+				
+				accelerometer_enter_low_power();
+			
+				TCA6416A_Disable_All_LEDs();
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 254);
+				HAL_Delay(500);
+				TCA6416A_Disable_All_LEDs();
+				HAL_Delay(500);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 254);
+				HAL_Delay(500);
+				TCA6416A_Disable_All_LEDs();
+			
+				button_is_pressed = false;
+				button_was_pressed = false;
+				button_pressed_time = 0;
+			
 				state = IDLE_MODE_TOUCH_BUTTON;
 			
 			break;
 			
 			case IDLE_MODE_ACCELEROMETER:
 				
-				//reset_detection_update();
+				reset_detection();
 			
 				if(accelerometer_shake_update())
 				{
@@ -238,7 +241,7 @@ int main(void)
 		
 			case IDLE_MODE_TOUCH_BUTTON:
 					
-				//reset_detection_update();
+				reset_detection();
 			
 				if(button_was_pressed)
 				{
@@ -367,22 +370,21 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){ //interrupt handler
     
 	if(GPIO_Pin == GPIO_PIN_2)
 	{ //check interrupt for specific pin                 
-    if(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2))
+    if(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) && !button_was_pressed)
 		{
 			button_is_pressed = true;
-      button_pressed_time = HAL_GetTick();
+      button_pressed_time_tmp = HAL_GetTick();
     }
-		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2))
+		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) && !button_was_pressed)
 		{ 
-      button_pressed_time = HAL_GetTick() - button_pressed_time;
+      button_pressed_time = HAL_GetTick() - button_pressed_time_tmp;
 			button_is_pressed = false;
 			button_was_pressed = true;
     }
   }
-	
 }
 
-void reset_detection_update(void)
+void reset_detection(void)
 {
 	if(button_was_pressed)
 	{
@@ -390,56 +392,8 @@ void reset_detection_update(void)
 		{
 			HAL_NVIC_SystemReset();
 		}
+		if(state == IDLE_MODE_ACCELEROMETER) button_was_pressed = false;
 	}
-}
-
-reset_cause_t reset_cause_get(void)
-{
-    reset_cause_t reset_cause;
-
-    if (__HAL_RCC_GET_FLAG(RCC_FLAG_LPWRRST))
-    {
-        reset_cause = RESET_CAUSE_LOW_POWER_RESET;
-    }
-    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_WWDGRST))
-    {
-        reset_cause = RESET_CAUSE_WINDOW_WATCHDOG_RESET;
-    }
-    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST))
-    {
-        reset_cause = RESET_CAUSE_INDEPENDENT_WATCHDOG_RESET;
-    }
-    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_SFTRST))
-    {
-        // This reset is induced by calling the ARM CMSIS 
-        // `NVIC_SystemReset()` function!
-        reset_cause = RESET_CAUSE_SOFTWARE_RESET; 
-    }
-    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST))
-    {
-        reset_cause = RESET_CAUSE_POWER_ON_POWER_DOWN_RESET;
-    }
-    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST))
-    {
-        reset_cause = RESET_CAUSE_EXTERNAL_RESET_PIN_RESET;
-    }
-    // Needs to come *after* checking the `RCC_FLAG_PORRST` flag in order to
-    // ensure first that the reset cause is NOT a POR/PDR reset. See note
-    // below. 
-  //  else if (__HAL_RCC_GET_FLAG(RCC_FLAG_))
- //   {
-  //      reset_cause = RESET_CAUSE_BROWNOUT_RESET;
-  //  }
-    else
-    {
-        reset_cause = RESET_CAUSE_UNKNOWN;
-    }
-
-    // Clear all the reset flags or else they will remain set during future
-    // resets until system power is fully removed.
-    __HAL_RCC_CLEAR_RESET_FLAGS();
-
-    return reset_cause; 
 }
 
 /* USER CODE END 4 */

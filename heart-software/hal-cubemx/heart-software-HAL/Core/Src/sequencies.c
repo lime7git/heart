@@ -245,6 +245,49 @@ void Run_Current_Sequency(void)
 			break;
 			}
 			
+			case SEQUENCY_10 : {
+				
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 127);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 127);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 126);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 126);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 124);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 124);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 120);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 120);
+						HAL_Delay(50);
+				
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 112);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 112);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 96);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 96);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 64);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 64);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 0);
+						HAL_Delay(50);
+				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 0);
+						HAL_Delay(50);
+				
+
+				
+				
+			break;
+			}
+			
+			
 			case SEQUENCY_LAST : {
 				
 				
@@ -264,11 +307,6 @@ void Run_Current_Sequency(void)
 					TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, (0xFF & ~(1 << abs((i - 7)))));
 					HAL_Delay(150);
 				}
-				
-				TCA6416A_Disable_All_LEDs();			
-				HAL_Delay(150);
-				TCA6416A_Enable_All_LEDs();			
-				HAL_Delay(1000);
 				
 			break;
 			}
