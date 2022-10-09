@@ -62,6 +62,8 @@
 	int random_number = 0;
 
 	sHEART_STATE state = POWER_UP;
+	
+	reset_cause_t reset_cause;
 
 /* USER CODE END PV */
 
@@ -69,7 +71,8 @@
 void SystemClock_Config(void);
 static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
-	
+void reset_detection_update(void);
+reset_cause_t reset_cause_get(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -85,6 +88,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	state = POWER_UP;
+	reset_cause = reset_cause_get();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -201,6 +205,8 @@ int main(void)
 			
 			case IDLE_MODE_ACCELEROMETER:
 				
+				//reset_detection_update();
+			
 				if(accelerometer_shake_update())
 				{
 					srand(accelerometer_get_total());
@@ -231,7 +237,9 @@ int main(void)
 			break;
 		
 			case IDLE_MODE_TOUCH_BUTTON:
-				
+					
+				//reset_detection_update();
+			
 				if(button_was_pressed)
 				{
 					srand(button_pressed_time);
@@ -372,6 +380,66 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){ //interrupt handler
     }
   }
 	
+}
+
+void reset_detection_update(void)
+{
+	if(button_was_pressed)
+	{
+		if(button_pressed_time > 10000)
+		{
+			HAL_NVIC_SystemReset();
+		}
+	}
+}
+
+reset_cause_t reset_cause_get(void)
+{
+    reset_cause_t reset_cause;
+
+    if (__HAL_RCC_GET_FLAG(RCC_FLAG_LPWRRST))
+    {
+        reset_cause = RESET_CAUSE_LOW_POWER_RESET;
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_WWDGRST))
+    {
+        reset_cause = RESET_CAUSE_WINDOW_WATCHDOG_RESET;
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST))
+    {
+        reset_cause = RESET_CAUSE_INDEPENDENT_WATCHDOG_RESET;
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_SFTRST))
+    {
+        // This reset is induced by calling the ARM CMSIS 
+        // `NVIC_SystemReset()` function!
+        reset_cause = RESET_CAUSE_SOFTWARE_RESET; 
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST))
+    {
+        reset_cause = RESET_CAUSE_POWER_ON_POWER_DOWN_RESET;
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST))
+    {
+        reset_cause = RESET_CAUSE_EXTERNAL_RESET_PIN_RESET;
+    }
+    // Needs to come *after* checking the `RCC_FLAG_PORRST` flag in order to
+    // ensure first that the reset cause is NOT a POR/PDR reset. See note
+    // below. 
+  //  else if (__HAL_RCC_GET_FLAG(RCC_FLAG_))
+ //   {
+  //      reset_cause = RESET_CAUSE_BROWNOUT_RESET;
+  //  }
+    else
+    {
+        reset_cause = RESET_CAUSE_UNKNOWN;
+    }
+
+    // Clear all the reset flags or else they will remain set during future
+    // resets until system power is fully removed.
+    __HAL_RCC_CLEAR_RESET_FLAGS();
+
+    return reset_cause; 
 }
 
 /* USER CODE END 4 */
