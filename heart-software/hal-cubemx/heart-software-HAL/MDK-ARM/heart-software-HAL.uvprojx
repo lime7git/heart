@@ -484,6 +484,16 @@
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32l0xx_hal_msp.c</FilePath>
             </File>
+            <File>
+              <FileName>accelerometer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\accelerometer.h</FilePath>
+            </File>
+            <File>
+              <FileName>accelerometer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\accelerometer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

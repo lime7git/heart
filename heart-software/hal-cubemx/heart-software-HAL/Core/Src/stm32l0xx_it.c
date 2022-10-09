@@ -151,7 +151,7 @@ void PVD_IRQHandler(void)
   /* USER CODE END PVD_IRQn 0 */
   HAL_PWR_PVD_IRQHandler();
   /* USER CODE BEGIN PVD_IRQn 1 */
-	if(state != SEQUENCY_RUNNING) state = LOW_BATTERY;
+	if(state != SEQUENCY_RUNNING && state != POWER_UP && state != INIT_ACCELEROMETER && state != INIT_TOUCH_BUTTON) state = LOW_BATTERY;
   /* USER CODE END PVD_IRQn 1 */
 }
 

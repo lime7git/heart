@@ -68,17 +68,21 @@ void Error_Handler(void);
 #define TCA6416A_RESET_Pin GPIO_PIN_6
 #define TCA6416A_RESET_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
+
 typedef enum HEART_STATE{
 	NONE,
 	FAULT,
 	POWER_UP,
-	INIT,
-	IDLE,
+	INIT_ACCELEROMETER,
+	INIT_TOUCH_BUTTON,
+	IDLE_MODE_ACCELEROMETER,
+	IDLE_MODE_TOUCH_BUTTON,
 	SEQUENCY_RUNNING,
 	SLEEP,
 	LOW_BATTERY,
 	
 } sHEART_STATE;
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
