@@ -55,6 +55,7 @@ void SysTick_Handler(void);
 void PVD_IRQHandler(void);
 void RTC_IRQHandler(void);
 void EXTI2_3_IRQHandler(void);
+void LPTIM1_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

@@ -4,9 +4,9 @@
 	lis3dh_ctrl_reg3_t ctrl_reg3;
   lis3dh_click_cfg_t click_cfg;
 	
-	static int16_t data_raw_acceleration[3];
-	static float acceleration_mg[3];
-	static uint8_t whoamI;
+	int16_t data_raw_acceleration[3];
+	float acceleration_mg[3];
+  uint8_t whoamI;
 
 	uint8_t count = 0;
 	float meanX = 0.0f;
@@ -14,7 +14,7 @@
 	float meanZ = 0.0f;
 	float total_accelerometer;
 
-	float roll_threshold = 1500;
+	float roll_threshold = 750;
 	uint8_t shake_detected = 0;
 
 int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp, uint16_t len)
@@ -50,13 +50,11 @@ void accelerometer_init(void)
 	 /* Enable Block Data Update. */
   lis3dh_block_data_update_set(&dev_ctx, PROPERTY_ENABLE);
   /* Set Output Data Rate to 1Hz. */
-  lis3dh_data_rate_set(&dev_ctx, LIS3DH_ODR_100Hz);
+  lis3dh_data_rate_set(&dev_ctx, LIS3DH_ODR_400Hz);
   /* Set full scale to 2g. */
   lis3dh_full_scale_set(&dev_ctx, LIS3DH_2g);
-  /* Enable temperature sensor. */
-  lis3dh_aux_adc_set(&dev_ctx, LIS3DH_AUX_ON_TEMPERATURE);
   /* Set device in continuous mode with 12 bit resol. */
-  lis3dh_operating_mode_set(&dev_ctx, LIS3DH_LP_8bit);
+  lis3dh_operating_mode_set(&dev_ctx, LIS3DH_HR_12bit);
 	
 	/* Set click threshold to 12h -> 0.281 g
    * 1 LSB = full scale/128
@@ -65,10 +63,10 @@ void accelerometer_init(void)
    * Set TIME_LATENCY to 20h -> 80 ms
    * Set TIME_WINDOW to 30h -> 120 ms
    * 1 LSB = 1/ODR */
-	lis3dh_tap_threshold_set(&dev_ctx, 0x30);
-  lis3dh_shock_dur_set(&dev_ctx, 0x30);
-  lis3dh_quiet_dur_set(&dev_ctx, 0x30);
-  lis3dh_double_tap_timeout_set(&dev_ctx, 0x45);
+	lis3dh_tap_threshold_set(&dev_ctx, 0x12);
+  lis3dh_shock_dur_set(&dev_ctx, 0x20);
+  lis3dh_quiet_dur_set(&dev_ctx, 0x20);
+  lis3dh_double_tap_timeout_set(&dev_ctx, 0x30);
   /* Enable Click interrupt on INT pin 1 */
   lis3dh_pin_int1_config_get(&dev_ctx, &ctrl_reg3);
   ctrl_reg3.i1_click = PROPERTY_ENABLE;
@@ -76,14 +74,10 @@ void accelerometer_init(void)
   lis3dh_int1_gen_duration_set(&dev_ctx, 0);
   /* Enable double click on all axis */
   lis3dh_tap_conf_get(&dev_ctx, &click_cfg);
-  click_cfg.xd = PROPERTY_DISABLE;
-  click_cfg.yd = PROPERTY_DISABLE;
+  click_cfg.xd = PROPERTY_ENABLE;
+  click_cfg.yd = PROPERTY_ENABLE;
   click_cfg.zd = PROPERTY_ENABLE;
   lis3dh_tap_conf_set(&dev_ctx, &click_cfg);
-	  /* Set Output Data Rate.
-   * The recommended accelerometer ODR for single and
-   * double-click recognition is 400 Hz or higher. */
-  lis3dh_data_rate_set(&dev_ctx, LIS3DH_ODR_400Hz);
   lis3dh_pin_sdo_sa0_mode_set(&dev_ctx, LIS3DH_PULL_UP_CONNECT);
 }
 
@@ -127,20 +121,22 @@ bool accelerometer_shake_update(void)
 
     lis3dh_temp_data_ready_get(&dev_ctx, &reg.byte);
 
-		if(count >= 50)
+		if(count >= 4)
 		{
 			meanX /= count;
 			meanY /= count;
 			meanZ /= count;
 			
-			total_accelerometer = sqrt((meanX * meanX) + (meanY * meanY) + (meanZ * meanZ));
+			total_accelerometer = (fabsf(meanX) + fabsf(meanY) + fabsf(meanZ)) / 3.0f;
 			
 			if(total_accelerometer > roll_threshold) 
 			{
+				total_accelerometer = 0;
 				ret = true;
 			}
 			else 
 			{
+				total_accelerometer = 0;
 				ret = false;
 			}
 			

@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
+#include "lptim.h"
 #include "rtc.h"
 #include "gpio.h"
 
@@ -59,7 +60,6 @@
 	uint32_t button_pressed_time_tmp = 0;
 	uint32_t button_pressed_time = 0;
 	
-
 	int previous_random;
 	int random_number = 0;
 
@@ -70,8 +70,6 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_NVIC_Init(void);
-
-void reset_detection(void);
 /* USER CODE BEGIN PFP */
 /* USER CODE END PFP */
 
@@ -111,6 +109,7 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_RTC_Init();
+  MX_LPTIM1_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -220,8 +219,12 @@ int main(void)
 					previous_random = random_number;
 					
 					Set_Sequency((SEQUENCIES)random_number);
+					state = SEQUENCY_RUNNING;
+					Run_Current_Sequency();
+					if(state != LOW_BATTERY) state = IDLE_MODE_ACCELEROMETER;
 				}
 				
+				/*
 				if(accelerometer_double_tap_update())
 				{
 					srand(accelerometer_get_total());
@@ -236,12 +239,18 @@ int main(void)
 					Run_Current_Sequency();
 					if(state != LOW_BATTERY) state = IDLE_MODE_ACCELEROMETER;
 				}
+				*/
 		
 			break;
 		
 			case IDLE_MODE_TOUCH_BUTTON:
 					
 				reset_detection();
+			
+				HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // 25uA
+				
+				HAL_ResumeTick();
+				SystemClock_Config();
 			
 				if(button_was_pressed)
 				{
@@ -271,8 +280,16 @@ int main(void)
 			break;
 			
 			case LOW_BATTERY:
+			{
+				static bool doOnce = true;
 				
-				TCA6416A_Disable_All_LEDs();
+				if(doOnce) 
+				{
+					TCA6416A_Disable_All_LEDs();
+					accelerometer_enter_low_power();
+					doOnce = false;
+				}
+				
 				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 127);
 				HAL_Delay(500);
 				TCA6416A_Disable_All_LEDs();
@@ -282,10 +299,8 @@ int main(void)
 				TCA6416A_Disable_All_LEDs();
 				
 				HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 0x61A8, RTC_WAKEUPCLOCK_RTCCLK_DIV16);
-				
 				HAL_SuspendTick();
 				
-				accelerometer_enter_low_power();
 				//HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // w sleep modzie na takiej konfiguracji bylo zuzycie na poziomie 50uA
 				HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // 25uA
 				
@@ -294,6 +309,7 @@ int main(void)
 				SystemClock_Config();
 			
 			break;
+			}
 			
 			default: 
 				
@@ -344,9 +360,12 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_RTC;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_RTC
+                              |RCC_PERIPHCLK_LPTIM1;
   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
   PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+  PeriphClkInit.LptimClockSelection = RCC_LPTIM1CLKSOURCE_LSI;
+
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
