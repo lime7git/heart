@@ -25,6 +25,7 @@ heart-software-hal\stm32l0xx_hal_rcc_ex.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/s
 heart-software-hal\stm32l0xx_hal_rcc_ex.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_flash_ramfunc.h
 heart-software-hal\stm32l0xx_hal_rcc_ex.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_i2c.h
 heart-software-hal\stm32l0xx_hal_rcc_ex.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_i2c_ex.h
+heart-software-hal\stm32l0xx_hal_rcc_ex.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_lptim.h
 heart-software-hal\stm32l0xx_hal_rcc_ex.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr.h
 heart-software-hal\stm32l0xx_hal_rcc_ex.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr_ex.h
 heart-software-hal\stm32l0xx_hal_rcc_ex.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rtc.h

@@ -26,11 +26,13 @@ heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_fla
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_flash_ramfunc.h
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_i2c.h
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_i2c_ex.h
+heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_lptim.h
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr.h
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr_ex.h
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rtc.h
 heart-software-hal\main.o: ../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_rtc_ex.h
 heart-software-hal\main.o: ../Core/Inc/i2c.h
+heart-software-hal\main.o: ../Core/Inc/lptim.h
 heart-software-hal\main.o: ../Core/Inc/rtc.h
 heart-software-hal\main.o: ../Core/Inc/gpio.h
 heart-software-hal\main.o: ../Drivers/TCA6416A/tca6416a.h

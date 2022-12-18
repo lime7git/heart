@@ -206,8 +206,6 @@ int main(void)
 			break;
 			
 			case IDLE_MODE_ACCELEROMETER:
-				
-				reset_detection();
 			
 				if(accelerometer_shake_update())
 				{
@@ -244,8 +242,6 @@ int main(void)
 			break;
 		
 			case IDLE_MODE_TOUCH_BUTTON:
-					
-				reset_detection();
 			
 				HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // 25uA
 				
@@ -401,18 +397,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){ //interrupt handler
 			button_was_pressed = true;
     }
   }
-}
-
-void reset_detection(void)
-{
-	if(button_was_pressed)
-	{
-		if(button_pressed_time > 10000)
-		{
-			HAL_NVIC_SystemReset();
-		}
-		if(state == IDLE_MODE_ACCELEROMETER) button_was_pressed = false;
-	}
 }
 
 /* USER CODE END 4 */
