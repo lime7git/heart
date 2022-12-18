@@ -59,9 +59,13 @@
 	bool button_was_pressed = false;
 	uint32_t button_pressed_time_tmp = 0;
 	uint32_t button_pressed_time = 0;
+	uint32_t timer_cnt;
+	uint32_t timer_arr;
 	
 	int previous_random;
 	int random_number = 0;
+	
+	uint8_t flag_it = false;
 
 	sHEART_STATE state = POWER_UP;
 
@@ -130,188 +134,18 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	// LPTIM1 - clock frequency : 289.0625 Hz // 3.4594594594595 ms
+	HAL_LPTIM_Counter_Start_IT(&hlptim1, 8672);
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 		
-		switch(state)
-		{
-			case NONE:
-				
-			break;
-			
-			case FAULT:
-				
-			break;
-			
-			case POWER_UP:
-				
-				TCA6416A_Initialization();
-				TCA6416A_Disable_All_LEDs();
-				Sequency_Initialization();
-			
-				Set_Sequency(SEQUENCY_INIT);
-				Run_Current_Sequency();
-
-				if(button_is_pressed)
-				{
-					state = INIT_ACCELEROMETER;
-				}
-				else state = INIT_TOUCH_BUTTON;
-			
-			break;
-			
-			case INIT_ACCELEROMETER:
-				
-				accelerometer_init();
-			
-				TCA6416A_Disable_All_LEDs();
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 253);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-				HAL_Delay(500);
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 253);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-			
-				button_is_pressed = false;
-				button_was_pressed = false;
-				button_pressed_time = 0;
-			
-				state = IDLE_MODE_ACCELEROMETER;
-			
-			break;
-			
-			case INIT_TOUCH_BUTTON:
-				
-				accelerometer_enter_low_power();
-			
-				TCA6416A_Disable_All_LEDs();
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 254);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-				HAL_Delay(500);
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 254);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-			
-				button_is_pressed = false;
-				button_was_pressed = false;
-				button_pressed_time = 0;
-			
-				state = IDLE_MODE_TOUCH_BUTTON;
-			
-			break;
-			
-			case IDLE_MODE_ACCELEROMETER:
-			
-				if(accelerometer_shake_update())
-				{
-					srand(accelerometer_get_total());
-					do{
-						random_number = rand() % ((SEQUENCY_LAST - 1) - SEQUENCY_1 + 1) + SEQUENCY_1;
-					}while(random_number == previous_random);
-					
-					previous_random = random_number;
-					
-					Set_Sequency((SEQUENCIES)random_number);
-					state = SEQUENCY_RUNNING;
-					Run_Current_Sequency();
-					if(state != LOW_BATTERY) state = IDLE_MODE_ACCELEROMETER;
-				}
-				
-				/*
-				if(accelerometer_double_tap_update())
-				{
-					srand(accelerometer_get_total());
-					do{
-						random_number = rand() % ((SEQUENCY_LAST - 1) - SEQUENCY_1 + 1) + SEQUENCY_1;
-					}while(random_number == previous_random);
-					
-					previous_random = random_number;
-					
-					Set_Sequency((SEQUENCIES)random_number);
-					state = SEQUENCY_RUNNING;
-					Run_Current_Sequency();
-					if(state != LOW_BATTERY) state = IDLE_MODE_ACCELEROMETER;
-				}
-				*/
+		timer_cnt = HAL_LPTIM_ReadCounter(&hlptim1);
+		timer_arr = HAL_LPTIM_ReadAutoReload(&hlptim1);
 		
-			break;
-		
-			case IDLE_MODE_TOUCH_BUTTON:
-			
-				HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // 25uA
-				
-				HAL_ResumeTick();
-				SystemClock_Config();
-			
-				if(button_was_pressed)
-				{
-					srand(button_pressed_time);
-					do{
-							random_number = rand() % ((SEQUENCY_LAST - 1) - SEQUENCY_1 + 1) + SEQUENCY_1;
-					}while(random_number == previous_random);
-					
-					previous_random = random_number;
-					
-					Set_Sequency((SEQUENCIES)random_number);
-					state = SEQUENCY_RUNNING;
-					Run_Current_Sequency();
-					if(state != LOW_BATTERY) state = IDLE_MODE_TOUCH_BUTTON;
-					
-					button_was_pressed = false;
-				}
-				
-			break;
-			
-			case SEQUENCY_RUNNING:
-				
-			break;
-			
-			case SLEEP:
-				
-			break;
-			
-			case LOW_BATTERY:
-			{
-				static bool doOnce = true;
-				
-				if(doOnce) 
-				{
-					TCA6416A_Disable_All_LEDs();
-					accelerometer_enter_low_power();
-					doOnce = false;
-				}
-				
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 127);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-				HAL_Delay(500);
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 127);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-				
-				HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 0x61A8, RTC_WAKEUPCLOCK_RTCCLK_DIV16);
-				HAL_SuspendTick();
-				
-				//HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // w sleep modzie na takiej konfiguracji bylo zuzycie na poziomie 50uA
-				HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // 25uA
-				
-				HAL_ResumeTick();
-				HAL_RTCEx_DeactivateWakeUpTimer(&hrtc);
-				SystemClock_Config();
-			
-			break;
-			}
-			
-			default: 
-				
-			break;
-		}
-  }
+	}
   /* USER CODE END 3 */
 }
 

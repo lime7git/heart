@@ -60,6 +60,7 @@ extern LPTIM_HandleTypeDef hlptim1;
 extern RTC_HandleTypeDef hrtc;
 /* USER CODE BEGIN EV */
 extern sHEART_STATE state;
+extern uint8_t flag_it;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -190,7 +191,7 @@ void EXTI2_3_IRQHandler(void)
 void LPTIM1_IRQHandler(void)
 {
   /* USER CODE BEGIN LPTIM1_IRQn 0 */
-
+	flag_it = !flag_it;
   /* USER CODE END LPTIM1_IRQn 0 */
   HAL_LPTIM_IRQHandler(&hlptim1);
   /* USER CODE BEGIN LPTIM1_IRQn 1 */
