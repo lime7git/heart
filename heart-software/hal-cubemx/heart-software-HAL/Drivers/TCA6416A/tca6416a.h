@@ -36,15 +36,15 @@
   * @param  None
   * @retval None
   */
-void TCA6416A_Initialization(void);
+HAL_StatusTypeDef TCA6416A_Initialization(void);
 
 /**
   * @brief  TCA6416A I2C write to register
   * @param  register_address TCA6416A register to write to
   * @param  data_to_transfer pointer to data to transfer
-  * @retval None
+  * @retval HAL_StatusTypeDef
   */
-void TCA6416A_Write(uint8_t register_address, uint8_t data_to_transfer);
+HAL_StatusTypeDef TCA6416A_Write(uint8_t register_address, uint8_t data_to_transfer);
 
 /**
   * @brief  TCA6416A I2C read from register
@@ -59,14 +59,14 @@ void TCA6416A_Read(uint8_t register_address, uint8_t *data_received);
   * @param  None
   * @retval None
   */
-void TCA6416A_Set_Port_0_As_Output(void);
+HAL_StatusTypeDef TCA6416A_Set_Port_0_As_Output(void);
 
 /**
   * @brief  TCA6416A set all GPIOs in Port 1 as outputs
   * @param  None
   * @retval None
   */
-void TCA6416A_Set_Port_1_As_Output(void);
+HAL_StatusTypeDef TCA6416A_Set_Port_1_As_Output(void);
 
 void TCA6416A_Disable_All_LEDs(void);
 void TCA6416A_Enable_All_LEDs(void);

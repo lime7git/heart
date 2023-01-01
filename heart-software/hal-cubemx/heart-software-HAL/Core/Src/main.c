@@ -20,15 +20,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
-#include "lptim.h"
 #include "rtc.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "tca6416a.h"
-#include "accelerometer.h"
-#include "sequencies.h"
+#include "state_machine.h"
 
 #include "stdbool.h"
 
@@ -59,15 +56,10 @@
 	bool button_was_pressed = false;
 	uint32_t button_pressed_time_tmp = 0;
 	uint32_t button_pressed_time = 0;
-	uint32_t timer_cnt;
-	uint32_t timer_arr;
 	
-	int previous_random;
-	int random_number = 0;
+	uint32_t previous_tick;
 	
-	uint8_t flag_it = false;
-
-	sHEART_STATE state = POWER_UP;
+	eHEART_STATE state_machine_current_state;
 
 /* USER CODE END PV */
 
@@ -89,7 +81,7 @@ static void MX_NVIC_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	state = POWER_UP;
+	State_Machine_Set_Next_State(&state_machine_current_state, STATE_INITIALIZATION);
 
   /* USER CODE END 1 */
 
@@ -113,7 +105,6 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_RTC_Init();
-  MX_LPTIM1_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -130,22 +121,24 @@ int main(void)
   HAL_PWR_ConfigPVD(&PVD_Configuration);
 	HAL_PWR_EnablePVD();
 	
+	previous_tick = HAL_GetTick();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	// LPTIM1 - clock frequency : 289.0625 Hz // 3.4594594594595 ms
-	HAL_LPTIM_Counter_Start_IT(&hlptim1, 8672);
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 		
-		timer_cnt = HAL_LPTIM_ReadCounter(&hlptim1);
-		timer_arr = HAL_LPTIM_ReadAutoReload(&hlptim1);
+		if( (HAL_GetTick() - previous_tick) >= 10)	// 10 ms loop
+		{
+			State_Machine_Update(&state_machine_current_state);
+			previous_tick = HAL_GetTick();
+		}
 		
-	}
+  }
   /* USER CODE END 3 */
 }
 
@@ -190,12 +183,9 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_RTC
-                              |RCC_PERIPHCLK_LPTIM1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_RTC;
   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
   PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
-  PeriphClkInit.LptimClockSelection = RCC_LPTIM1CLKSOURCE_LSI;
-
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
