@@ -48,7 +48,7 @@ bool accelerometer_init(void)
 	 /* Enable Block Data Update. */
   lis3dh_block_data_update_set(&dev_ctx, PROPERTY_ENABLE);
   /* Set Output Data Rate to 1Hz. */
-  lis3dh_data_rate_set(&dev_ctx, LIS3DH_ODR_400Hz);
+  lis3dh_data_rate_set(&dev_ctx, LIS3DH_ODR_100Hz);
   /* Set full scale to 2g. */
   lis3dh_full_scale_set(&dev_ctx, LIS3DH_2g);
   /* Set device in continuous mode with 12 bit resol. */
