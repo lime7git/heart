@@ -23,6 +23,7 @@
 #include "stm32l0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "state_machine.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,10 +57,9 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern LPTIM_HandleTypeDef hlptim1;
 extern RTC_HandleTypeDef hrtc;
 /* USER CODE BEGIN EV */
-extern sHEART_STATE state;
+extern eHEART_STATE state_machine_current_state;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -152,7 +152,10 @@ void PVD_IRQHandler(void)
   /* USER CODE END PVD_IRQn 0 */
   HAL_PWR_PVD_IRQHandler();
   /* USER CODE BEGIN PVD_IRQn 1 */
-	if(state != SEQUENCY_RUNNING && state != POWER_UP && state != INIT_ACCELEROMETER && state != INIT_TOUCH_BUTTON) state = LOW_BATTERY;
+	if(state_machine_current_state == STATE_IDLE) 
+	{
+		State_Machine_Set_Next_State(&state_machine_current_state, STATE_LOW_BATTERY);
+	}
   /* USER CODE END PVD_IRQn 1 */
 }
 
@@ -182,20 +185,6 @@ void EXTI2_3_IRQHandler(void)
   /* USER CODE BEGIN EXTI2_3_IRQn 1 */
 
   /* USER CODE END EXTI2_3_IRQn 1 */
-}
-
-/**
-  * @brief This function handles LPTIM1 global interrupt / LPTIM1 wake-up interrupt through EXTI line 29.
-  */
-void LPTIM1_IRQHandler(void)
-{
-  /* USER CODE BEGIN LPTIM1_IRQn 0 */
-
-  /* USER CODE END LPTIM1_IRQn 0 */
-  HAL_LPTIM_IRQHandler(&hlptim1);
-  /* USER CODE BEGIN LPTIM1_IRQn 1 */
-
-  /* USER CODE END LPTIM1_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

@@ -20,15 +20,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
-#include "lptim.h"
 #include "rtc.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "tca6416a.h"
-#include "accelerometer.h"
-#include "sequencies.h"
+#include "state_machine.h"
 
 #include "stdbool.h"
 
@@ -60,10 +57,9 @@
 	uint32_t button_pressed_time_tmp = 0;
 	uint32_t button_pressed_time = 0;
 	
-	int previous_random;
-	int random_number = 0;
-
-	sHEART_STATE state = POWER_UP;
+	uint32_t previous_tick;
+	
+	eHEART_STATE state_machine_current_state;
 
 /* USER CODE END PV */
 
@@ -85,7 +81,7 @@ static void MX_NVIC_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	state = POWER_UP;
+	State_Machine_Set_Next_State(&state_machine_current_state, STATE_INITIALIZATION);
 
   /* USER CODE END 1 */
 
@@ -109,7 +105,6 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_RTC_Init();
-  MX_LPTIM1_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -126,6 +121,7 @@ int main(void)
   HAL_PWR_ConfigPVD(&PVD_Configuration);
 	HAL_PWR_EnablePVD();
 	
+	previous_tick = HAL_GetTick();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -136,181 +132,12 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		
-		switch(state)
+		if( (HAL_GetTick() - previous_tick) >= 10)	// 10 ms loop
 		{
-			case NONE:
-				
-			break;
-			
-			case FAULT:
-				
-			break;
-			
-			case POWER_UP:
-				
-				TCA6416A_Initialization();
-				TCA6416A_Disable_All_LEDs();
-				Sequency_Initialization();
-			
-				Set_Sequency(SEQUENCY_INIT);
-				Run_Current_Sequency();
-
-				if(button_is_pressed)
-				{
-					state = INIT_ACCELEROMETER;
-				}
-				else state = INIT_TOUCH_BUTTON;
-			
-			break;
-			
-			case INIT_ACCELEROMETER:
-				
-				accelerometer_init();
-			
-				TCA6416A_Disable_All_LEDs();
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 253);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-				HAL_Delay(500);
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 253);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-			
-				button_is_pressed = false;
-				button_was_pressed = false;
-				button_pressed_time = 0;
-			
-				state = IDLE_MODE_ACCELEROMETER;
-			
-			break;
-			
-			case INIT_TOUCH_BUTTON:
-				
-				accelerometer_enter_low_power();
-			
-				TCA6416A_Disable_All_LEDs();
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 254);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-				HAL_Delay(500);
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_1_ADDRESS, 254);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-			
-				button_is_pressed = false;
-				button_was_pressed = false;
-				button_pressed_time = 0;
-			
-				state = IDLE_MODE_TOUCH_BUTTON;
-			
-			break;
-			
-			case IDLE_MODE_ACCELEROMETER:
-			
-				if(accelerometer_shake_update())
-				{
-					srand(accelerometer_get_total());
-					do{
-						random_number = rand() % ((SEQUENCY_LAST - 1) - SEQUENCY_1 + 1) + SEQUENCY_1;
-					}while(random_number == previous_random);
-					
-					previous_random = random_number;
-					
-					Set_Sequency((SEQUENCIES)random_number);
-					state = SEQUENCY_RUNNING;
-					Run_Current_Sequency();
-					if(state != LOW_BATTERY) state = IDLE_MODE_ACCELEROMETER;
-				}
-				
-				/*
-				if(accelerometer_double_tap_update())
-				{
-					srand(accelerometer_get_total());
-					do{
-						random_number = rand() % ((SEQUENCY_LAST - 1) - SEQUENCY_1 + 1) + SEQUENCY_1;
-					}while(random_number == previous_random);
-					
-					previous_random = random_number;
-					
-					Set_Sequency((SEQUENCIES)random_number);
-					state = SEQUENCY_RUNNING;
-					Run_Current_Sequency();
-					if(state != LOW_BATTERY) state = IDLE_MODE_ACCELEROMETER;
-				}
-				*/
-		
-			break;
-		
-			case IDLE_MODE_TOUCH_BUTTON:
-			
-				HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // 25uA
-				
-				HAL_ResumeTick();
-				SystemClock_Config();
-			
-				if(button_was_pressed)
-				{
-					srand(button_pressed_time);
-					do{
-							random_number = rand() % ((SEQUENCY_LAST - 1) - SEQUENCY_1 + 1) + SEQUENCY_1;
-					}while(random_number == previous_random);
-					
-					previous_random = random_number;
-					
-					Set_Sequency((SEQUENCIES)random_number);
-					state = SEQUENCY_RUNNING;
-					Run_Current_Sequency();
-					if(state != LOW_BATTERY) state = IDLE_MODE_TOUCH_BUTTON;
-					
-					button_was_pressed = false;
-				}
-				
-			break;
-			
-			case SEQUENCY_RUNNING:
-				
-			break;
-			
-			case SLEEP:
-				
-			break;
-			
-			case LOW_BATTERY:
-			{
-				static bool doOnce = true;
-				
-				if(doOnce) 
-				{
-					TCA6416A_Disable_All_LEDs();
-					accelerometer_enter_low_power();
-					doOnce = false;
-				}
-				
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 127);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-				HAL_Delay(500);
-				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 127);
-				HAL_Delay(500);
-				TCA6416A_Disable_All_LEDs();
-				
-				HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 0x61A8, RTC_WAKEUPCLOCK_RTCCLK_DIV16);
-				HAL_SuspendTick();
-				
-				//HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // w sleep modzie na takiej konfiguracji bylo zuzycie na poziomie 50uA
-				HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON,PWR_STOPENTRY_WFI); // 25uA
-				
-				HAL_ResumeTick();
-				HAL_RTCEx_DeactivateWakeUpTimer(&hrtc);
-				SystemClock_Config();
-			
-			break;
-			}
-			
-			default: 
-				
-			break;
+			State_Machine_Update(&state_machine_current_state);
+			previous_tick = HAL_GetTick();
 		}
+		
   }
   /* USER CODE END 3 */
 }
@@ -356,12 +183,9 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_RTC
-                              |RCC_PERIPHCLK_LPTIM1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_RTC;
   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
   PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
-  PeriphClkInit.LptimClockSelection = RCC_LPTIM1CLKSOURCE_LSI;
-
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
