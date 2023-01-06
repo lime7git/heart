@@ -101,6 +101,13 @@ void State_Machine_Update(eHEART_STATE *state)
 					doOnce = false;
 				}
 				
+				if(PWR_CSR_PVDO == 0U)
+				{
+					State_Machine_Set_Next_State(state, STATE_INITIALIZATION);	
+					doOnce = true;
+					return;
+				}
+				
 				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 127);
 				HAL_Delay(500);
 				TCA6416A_Disable_All_LEDs();
@@ -108,6 +115,7 @@ void State_Machine_Update(eHEART_STATE *state)
 				TCA6416A_Write(TCA6416A_OUTPUT_PORT_0_ADDRESS, 127);
 				HAL_Delay(500);
 				TCA6416A_Disable_All_LEDs();
+				
 				
 				HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 0x61A8, RTC_WAKEUPCLOCK_RTCCLK_DIV16);
 				HAL_SuspendTick();
@@ -117,7 +125,7 @@ void State_Machine_Update(eHEART_STATE *state)
 				
 				HAL_ResumeTick();
 				HAL_RTCEx_DeactivateWakeUpTimer(&hrtc);
-			
+				
 			break;
 			}
 			
