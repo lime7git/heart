@@ -152,7 +152,7 @@ void PVD_IRQHandler(void)
   /* USER CODE END PVD_IRQn 0 */
   HAL_PWR_PVD_IRQHandler();
   /* USER CODE BEGIN PVD_IRQn 1 */
-	if(state_machine_current_state == STATE_IDLE) 
+	if(state_machine_current_state != STATE_SEQUENCY_RUNNING) 
 	{
 		State_Machine_Set_Next_State(&state_machine_current_state, STATE_LOW_BATTERY);
 	}

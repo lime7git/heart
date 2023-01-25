@@ -2,6 +2,7 @@
 
 extern bool button_was_pressed;
 extern uint32_t button_pressed_time;
+uint32_t timer = 0;
 
 void State_Machine_Update(eHEART_STATE *state)
 {
@@ -26,7 +27,7 @@ void State_Machine_Update(eHEART_STATE *state)
 			
 			case STATE_IDLE:
 			{
-				static uint32_t timer = 0;
+				//static uint32_t timer = 0;
 				
 				if(timer >= 100)
 				{
@@ -77,6 +78,8 @@ void State_Machine_Update(eHEART_STATE *state)
 				
 				HAL_ResumeTick();
 				
+				if(*state != STATE_SLEEP) break;
+				
 				if((TCA6416A_Initialization() == HAL_OK) && (accelerometer_init() == true))	// initialize gpio expadner and accelerometer
 				{
 					TCA6416A_Disable_All_LEDs();
@@ -101,7 +104,10 @@ void State_Machine_Update(eHEART_STATE *state)
 					doOnce = false;
 				}
 				
-				if(PWR_CSR_PVDO == 0U)
+				HAL_PWR_EnablePVD();
+				
+				
+				if(__HAL_PWR_GET_FLAG(PWR_FLAG_PVDO) == RESET)
 				{
 					State_Machine_Set_Next_State(state, STATE_INITIALIZATION);	
 					doOnce = true;
